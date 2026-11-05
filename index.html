@@ -3690,15 +3690,15 @@
           'Stock Report': {
             title: "Inventory Movement & Stock Report",
             desc: "Review opening stock, receipts or production, dispatches, and current closing balance.",
-            headers: [{ label: "Item / SKU" }, { label: "Unit" }, { label: "Opening Stock", align: "right" }, { label: "Received / Produced", align: "right" }, { label: "Issued / Dispatched", align: "right" }, { label: "Closing Stock", align: "right" }, { label: "Stock Status", align: "center" }],
+            headers: [{ label: "Item / SKU" }, { label: "Unit" }, { label: "Opening Stock", align: "right" }, { label: "Received / Produced", align: "right" }, { label: "Issued / Dispatched", align: "right" }, { label: "Closing Stock", align: "right" }, { label: "Fat Quantity (kg)", align: "right" }, { label: "Stock Status", align: "center" }],
             charts: {
               line: { title: "Standard Milk  Movement", categories: ["Opening", "Produced", "Dispatched", "Closing"], series: [{ name: "", values: [200, 1200, 1150, 250], color: "#004B6E" }] },
               pie: { title: "Items by Stock Status", slices: [{ label: "Sufficient", value: 2 }, { label: "Low stock", value: 1 }] }
             },
             rows: [
-              ["Raw Whole Milk", "L", "8,200", "24,500", "14,300", "18,400", '<span class="badge badge-green">SUFFICIENT</span>'],
-              ["Standard Milk 1L", "", "200", "1,200", "1,150", "250", '<span class="badge badge-amber">LOW STOCK</span>'],
-              ["Pure Cow Ghee 1L Jar", "Cartons", "90", "180", "120", "150", '<span class="badge badge-green">SUFFICIENT</span>']
+              ["Raw Whole Milk", "L", "8,200", "24,500", "14,300", "18,400", "1,140.80", '<span class="badge badge-green">SUFFICIENT</span>'],
+              ["Standard Milk 1L", "", "200", "1,200", "1,150", "250", "7.50", '<span class="badge badge-amber">LOW STOCK</span>'],
+              ["Pure Cow Ghee 1L Jar", "Cartons", "90", "180", "120", "150", "—", '<span class="badge badge-green">SUFFICIENT</span>']
             ]
           },
           'Vehicle Management Report': {
@@ -4345,12 +4345,15 @@
             { label: 'Orders for Review', value: format(countStatuses(6, 'review')) }
           ];
         }
-        case 'Stock Report':
+        case 'Stock Report': {
+          const fatQuantity = rows.reduce((total, row) => total + number(row[6]), 0);
           return [
             { label: 'Items Tracked', value: format(rows.length) },
-            { label: 'Sufficient Stock', value: format(countStatuses(6, 'sufficient')) },
-            { label: 'Low Stock Items', value: format(countStatuses(6, 'low stock')) }
+            { label: 'Fat Quantity', value: `${format(fatQuantity)} kg` },
+            { label: 'Sufficient Stock', value: format(countStatuses(7, 'sufficient')) },
+            { label: 'Low Stock Items', value: format(countStatuses(7, 'low stock')) }
           ];
+        }
         case 'Vehicle Management Report':
           return [
             { label: 'Total Trips', value: format(rows.length) },
