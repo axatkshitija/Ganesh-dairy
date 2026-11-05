@@ -26,6 +26,7 @@
     /* Layout Components */
     #sidebar {
       width: 280px;
+      transition: width 0.2s ease;
       background-color: #003852;
       color: #FFFFFF;
       display: flex;
@@ -35,6 +36,24 @@
       z-index: 30;
       box-shadow: 4px 0 16px rgba(0,0,0,0.12);
     }
+    body.sidebar-collapsed #sidebar { width: 72px; }
+    body.sidebar-collapsed .sidebar-header {
+      height: 0;
+      min-height: 0;
+      padding: 0;
+      overflow: hidden;
+      border: 0;
+    }
+    body.sidebar-collapsed .nav-btn {
+      justify-content: center;
+      padding: 10px 6px;
+    }
+    body.sidebar-collapsed .nav-btn-inner { justify-content: center; }
+    body.sidebar-collapsed .nav-btn-inner span:not(:first-child),
+    body.sidebar-collapsed .nav-btn > span,
+    body.sidebar-collapsed .nav-submenu-container { display: none; }
+    body.sidebar-collapsed .sidebar-footer { justify-content: center; }
+    body.sidebar-collapsed .sidebar-footer > div { display: none; }
     .sidebar-header {
       height: 76px;
       padding: 0 16px;
@@ -183,6 +202,22 @@
       box-shadow: 0 1px 3px rgba(0,0,0,0.02);
       z-index: 20;
     }
+    .sidebar-toggle {
+      width: 36px;
+      height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #CBD5E1;
+      border-radius: 8px;
+      background: #FFFFFF;
+      color: #004B6E;
+      cursor: pointer;
+      font-size: 19px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .sidebar-toggle:hover { background: #F1F5F9; }
     .breadcrumbs {
       display: flex;
       align-items: center;
@@ -282,6 +317,28 @@
     .card-subtitle {
       font-size: 12px;
       color: #64748B;
+    }
+    .report-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+    }
+    .report-summary-card {
+      padding: 14px 16px;
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+      background: #F8FAFC;
+    }
+    .report-summary-label {
+      color: #64748B;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .report-summary-value {
+      margin-top: 6px;
+      color: #004B6E;
+      font-size: 20px;
+      font-weight: 800;
     }
     .report-charts {
       display: grid;
@@ -419,6 +476,28 @@
       overflow-x: auto;
       border: 1px solid #E2E8F0;
       border-radius: 12px;
+    }
+    .table-filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: end;
+      gap: 12px;
+      padding: 14px;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+    }
+    .table-filter-field {
+      display: flex;
+      flex: 1 1 170px;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 150px;
+    }
+    .table-filter-field label {
+      color: #475569;
+      font-size: 11px;
+      font-weight: 700;
     }
     .cash-collections-table {
       max-height: 60vh;
@@ -577,7 +656,7 @@
       overflow-y: auto;
     }
     #modal-box.inward-modal {
-      max-width: 760px;
+      max-width: 1000px;
       max-height: calc(100vh - 32px);
       overflow-y: auto;
     }
@@ -657,6 +736,44 @@
       border-radius: 10px;
       background: #F8FAFC;
     }
+    .inward-quality-section {
+      grid-column: 1 / -1;
+      padding: 16px;
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+      background: #F8FAFC;
+    }
+    .inward-quality-fields {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      align-items: start;
+    }
+    .inward-quality-fields .form-group {
+      padding: 12px;
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+      background: #FFFFFF;
+    }
+    .inward-adulteration-checks {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+    }
+    .inward-adulteration-check {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px;
+      border: 1px solid #CBD5E1;
+      border-radius: 8px;
+      background: #FFFFFF;
+      color: #334155;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .inward-adulteration-check input { accent-color: #2E9E40; }
     .sales-order-recurring-panel[hidden] { display: none !important; }
     #modal-fields-container .sales-order-recurring-panel .form-group[hidden] { display: none !important; }
     .sales-order-weekdays {
@@ -879,6 +996,13 @@
       flex-direction: column;
       gap: 10px;
     }
+    .document-number-field {
+      grid-column: 1 / -1;
+    }
+    .sales-order-number-field {
+      grid-column: auto;
+      width: min(100%, 280px);
+    }
     .rfq-product-fields { display: flex; flex-direction: column; gap: 10px; }
     .rfq-product-list { display: flex; flex-direction: column; gap: 10px; }
     .rfq-product-row {
@@ -918,7 +1042,8 @@
       #modal-fields-container.bill-fields { grid-template-columns: 1fr; }
       #modal-fields-container.internal-transfer-fields { grid-template-columns: 1fr; }
       #modal-fields-container.generate-invoice-fields { grid-template-columns: 1fr; }
-      #modal-fields-container.inward-fields { grid-template-columns: 1fr; }
+      #modal-fields-container.inward-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .inward-quality-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       #modal-fields-container.sales-order-fields { grid-template-columns: 1fr; }
       .rfq-product-row { grid-template-columns: 1fr 1fr; }
       .rfq-remove-product { grid-column: 2; justify-self: end; }
@@ -960,7 +1085,7 @@
       </svg>
       <div>
         <h1 class="sidebar-brand-name" id="sidebar-brand-name">Shri Ganesh Milk Products</h1>
-        <span style="font-size: 10px; font-weight: 700; color: #3EB852; text-transform: uppercase; letter-spacing: 0.5px;">DAIRY Management Software</span>
+        <span style="font-size: 10px; font-weight: 700; color: #3EB852; text-transform: uppercase; letter-spacing: 0.5px;">Dairy Management Software</span>
       </div>
     </div>
 
@@ -986,10 +1111,13 @@
     
     <!-- Header Navigation Bar -->
     <header class="top-bar">
-      <div class="breadcrumbs">
-        <span class="breadcrumb-root" id="bc-module">Home</span>
-        <span class="breadcrumb-divider">/</span>
-        <span class="breadcrumb-active" id="bc-submenu">Overview</span>
+      <div style="display: flex; align-items: center; gap: 14px; min-width: 0;">
+        <button class="sidebar-toggle" id="sidebar-toggle" type="button" aria-label="Collapse sidebar" aria-expanded="true" onclick="toggleSidebar()">☰</button>
+        <div class="breadcrumbs">
+          <span class="breadcrumb-root" id="bc-module">Home</span>
+          <span class="breadcrumb-divider">/</span>
+          <span class="breadcrumb-active" id="bc-submenu">Overview</span>
+        </div>
       </div>
       <div class="facility-chip">
         <span style="font-size: 13px;">●</span>
@@ -1044,13 +1172,13 @@
     const vehicleTypeOptions = ['Owned', 'Hired'];
     const systemModules = [
       { id: 'Home', label: 'Home', subMenus: ['Overview'] },
-      { id: 'Purchase', label: 'Purchase', subMenus: ['Raw Milk Intake', 'Purchase Orders', 'Vendor Master', 'Purchase Report'] },
-      { id: 'Sales', label: 'Sales', subMenus: ['Sales Orders', 'Customer Invoices', 'Delivery Challans', 'Sales Report'] },
-      { id: 'Manufacturing', label: 'Manufacturing', subMenus: ['Production Orders', 'Bill of Materials (BOM)', 'Batch Tracking', 'Manufacturing Report'] },
+      { id: 'Purchase', label: 'Purchase', subMenus: ['Raw Milk Intake', 'Purchase Orders', 'Purchase Report'] },
       { id: 'Quality', label: 'Quality', subMenus: ['Quality Control Points', 'Milk Inward Lab Check', 'Inspection Reports'] },
       { id: 'Stock', label: 'Stock', subMenus: ['Storage Stock', 'Warehouse Operations', 'Internal Transfers', 'Stock Report'] },
+      { id: 'Manufacturing', label: 'Manufacturing', subMenus: ['Production Orders', 'Bill of Materials (BOM)', 'Batch Tracking', 'Manufacturing Report'] },
+      { id: 'Sales', label: 'Sales', subMenus: ['Sales Orders', 'Customer Invoices', 'Billing', 'Delivery Challans', 'Sales Report'] },
       { id: 'Vehicle management', label: 'Vehicle management', subMenus: ['Vehicle Registration', 'Route & Seal Management', 'Travel & Distance Record', 'Vehicle Management Report'] },
-      { id: 'Accounting', label: 'Accounting', subMenus: ['Payment Mode',  'Bank Reconciliation', 'Billing', 'Customer Ledgers', 'Expenses', 'Accounting Report'] },
+      { id: 'Accounting', label: 'Accounting', subMenus: ['Payment Mode',  'Bank Reconciliation', 'Customer Ledgers', 'Expenses', 'Accounting Report'] },
       { id: 'Masters', label: 'Masters', isMasters: true }
     ];
 
@@ -1059,6 +1187,7 @@
       { id: 'Users', type: 'group', label: 'Users', children: ['Employees', 'Assign Role'] },
       { id: 'Product', type: 'group', label: 'Product', children: ['Product', 'Units of Measure', 'Packing Type', 'SKU', 'Raw Material', 'Cash Discount'] },
       { id: 'Customer', type: 'group', label: 'Customer', children: ['Customer Type', 'Customers',] },
+      { id: 'Vendor Master', type: 'single', label: 'Vendor Master' },
       // { id: 'Rate', type: 'group', label: 'Rate', children: ['Customer Rate', 'Selling Price'] },
       { id: 'Expense Head', type: 'single', label: 'Expense Head', children: ['Expense Head',] }
     ];
@@ -1073,6 +1202,11 @@
       { name: 'Mahalaxmi Super Market', type: 'Dealer (Wholesale Distributor)', contact: 'A. Patil', mobile: '9876543210', email: 'accounts@mahalaxmi.example', gstin: '27AABCU9603R1ZM', address: 'Market Road, Nashik' },
       { name: 'Hotel Sai Palace', type: 'Hotel & Institutional (Catering/Bulk)', contact: 'S. Deshmukh', mobile: '9876501234', email: 'purchase@saipalace.example', gstin: '27AACCS1234K1Z4', address: 'Station Road, Pune' },
       { name: 'Shri Krishna Dairy Parlour', type: 'Retail Counter (Company Owned)', contact: 'R. Jadhav', mobile: '9822012345', email: 'krishnaparlour@example.com', gstin: '', address: 'Main Bazaar, Thane' }
+    ];
+    let salesOrderRecords = [
+      { number: 'SO-2026-901', customer: 'Mahalaxmi Super Market', orderType: 'One-Time', route: 'Route North-1', standard: 25, toned: 15, paneer: 0, shift: 'Morning', status: 'APPROVED' },
+      { number: 'SO-2026-902', customer: 'Hotel Sai Palace', orderType: 'Recurring', frequency: 'Daily', route: 'Route Central-2', standard: 40, toned: 20, paneer: 0, shift: 'Morning', status: 'APPROVED' },
+      { number: 'SO-2026-903', customer: 'Shri Krishna Dairy Parlour', orderType: 'One-Time', route: 'Route South-3', standard: 15, toned: 10, paneer: 0, shift: 'Evening', status: 'APPROVED' }
     ];
     let customerRateScope = 'Company';
     let customerRateModalScope = 'Company';
@@ -1106,7 +1240,7 @@
       { voucher: 'EXP-2026-1101', date: '2026-11-01', company: 'Shri Ganesh Milk Products', centre: 'Central Processing Facility', head: 'Plant Electricity', description: 'Cold room power charges', amount: 28900, paymentMode: 'Online', concernedPerson: 'K. More' }
     ];
     let excessFundHeadRecords = [
-      { name: ' Security Deposit Retention', purpose: 'Customer crate security deposits and related excess receipts.', treatment: 'Refundable Deposit', ledgerAccount: 'Customer Security Deposits', active: true },
+      { name: ' Security Deposit Retention', purpose: 'Customer security deposits and related excess receipts.', treatment: 'Refundable Deposit', ledgerAccount: 'Customer Security Deposits', active: true },
       { name: 'Customer Advance Balance', purpose: 'Excess customer payments retained for future invoices.', treatment: 'Adjust Against Future Invoice', ledgerAccount: 'Customer Advances', active: true }
     ];
     let currentFacility = 'Shri Ganesh Milk Products';
@@ -1119,6 +1253,13 @@
         'Gajanan Milk Products': 'Gajanan',
       };
       document.getElementById('facility-logo-mark').textContent = logoMarks[facility] || 'GD';
+    }
+
+    function toggleSidebar() {
+      const isCollapsed = document.body.classList.toggle('sidebar-collapsed');
+      const toggle = document.getElementById('sidebar-toggle');
+      toggle.setAttribute('aria-expanded', String(!isCollapsed));
+      toggle.setAttribute('aria-label', isCollapsed ? 'Expand sidebar' : 'Collapse sidebar');
     }
 
     // Interactive Lab State
@@ -1700,11 +1841,16 @@
       renderExpenseSearchRows();
     }
     function openSalesOrderModal() {
-      openModal('Book Customer Order', ['Customer Name', 'Order Type', 'Route', 'Standard Milk Quantity', 'Toned Milk Quantity', 'Paneer / Ghee Quantity', 'Delivery Shift']);
+      openModal('Book Customer Order', ['Sales Order No.', 'Customer Name', 'Order Type', 'Route', 'Standard Milk Quantity', 'Toned Milk Quantity', 'Paneer / Ghee Quantity', 'Delivery Shift']);
       const modal = document.getElementById('modal-box');
       const container = document.getElementById('modal-fields-container');
+      const salesOrderNumberGroup = container.children[0];
+      salesOrderNumberGroup.classList.add('sales-order-number-field');
+      const salesOrderNumberInput = salesOrderNumberGroup.querySelector('input');
+      salesOrderNumberInput.value = `SO-${new Date().getFullYear()}-${String(Date.now()).slice(-6)}`;
+      salesOrderNumberInput.readOnly = true;
       container.classList.add('sales-order-fields');
-      const customerGroup = container.children[0];
+      const customerGroup = container.children[1];
       customerGroup.querySelector('input').remove();
       customerGroup.insertAdjacentHTML('beforeend', `
         <select class="form-control" required>
@@ -1712,7 +1858,7 @@
           ${customerRecords.map(customer => `<option value="${customer.name}">${customer.name}</option>`).join('')}
         </select>
       `);
-      const orderTypeGroup = container.children[1];
+      const orderTypeGroup = container.children[2];
       orderTypeGroup.querySelector('input').remove();
       orderTypeGroup.insertAdjacentHTML('beforeend', `
         <select id="sales-order-type" class="form-control" required onchange="toggleSalesOrderSchedule()">
@@ -1720,7 +1866,7 @@
           <option value="Recurring">Recurring</option>
         </select>
       `);
-      const routeGroup = container.children[2];
+      const routeGroup = container.children[3];
       routeGroup.querySelector('input').remove();
       routeGroup.insertAdjacentHTML('beforeend', `
         <select class="form-control" required>
@@ -1728,7 +1874,7 @@
           <option>Route North-1</option><option>Route Central-2</option><option>Route South-3</option>
         </select>
       `);
-      [container.children[3], container.children[4], container.children[5]].forEach(group => {
+      [container.children[4], container.children[5], container.children[6]].forEach(group => {
         const quantityInput = group.querySelector('input');
         quantityInput.type = 'number';
         quantityInput.min = '0';
@@ -1736,7 +1882,7 @@
         quantityInput.value = '0';
         quantityInput.addEventListener('input', () => quantityInput.setCustomValidity(''));
       });
-      const shiftGroup = container.children[6];
+      const shiftGroup = container.children[7];
       shiftGroup.querySelector('input').remove();
       shiftGroup.insertAdjacentHTML('beforeend', `
         <select class="form-control" required>
@@ -1831,19 +1977,40 @@
       document.getElementById('sales-order-weekday').required = isRecurring && frequency === 'Weekly';
     }
     function openGenerateInvoiceModal() {
-      openModal("Generate Invoice", ["Customer Name", "Invoice Date", "Due Date"]);
+      openModal("Generate Invoice", ["Sales Order No.", "Route", "Customer Name", "Invoice Date", "Due Date"]);
       const container = document.getElementById('modal-fields-container');
+      const salesOrderNumberGroup = container.children[0];
+      salesOrderNumberGroup.classList.add('sales-order-number-field');
+      const salesOrderNumberInput = salesOrderNumberGroup.querySelector('input');
+      salesOrderNumberInput.id = 'invoice-sales-order-number';
+      salesOrderNumberInput.placeholder = 'Enter Sales Order No.';
+      const routeInput = container.children[1].querySelector('input');
+      const customerInput = container.children[2].querySelector('input');
+      routeInput.readOnly = true;
+      customerInput.readOnly = true;
+      routeInput.placeholder = 'Auto-filled from Sales Order';
+      customerInput.placeholder = 'Auto-filled from Sales Order';
+      const updateSalesOrderDetails = () => {
+        const order = salesOrderRecords.find(record => record.number.toLowerCase() === salesOrderNumberInput.value.trim().toLowerCase());
+        routeInput.value = order ? order.route : '';
+        customerInput.value = order ? order.customer : '';
+        salesOrderNumberInput.setCustomValidity(salesOrderNumberInput.value.trim() && !order
+          ? 'Enter a Sales Order No. that exists in Sales Orders.'
+          : '');
+      };
+      salesOrderNumberInput.addEventListener('input', updateSalesOrderDetails);
       container.classList.add('generate-invoice-fields');
       container.querySelectorAll(':scope > .form-group input').forEach(input => { input.required = true; });
+      container.children[3].querySelector('input').required = true;
+      container.children[4].querySelector('input').required = true;
       container.insertAdjacentHTML('beforeend', `
         <div class="generate-invoice-tabs" role="tablist" aria-label="Invoice details">
           <button type="button" class="generate-invoice-tab active" id="generate-invoice-lines-tab" role="tab" aria-selected="true" aria-controls="generate-invoice-lines-panel" onclick="setGenerateInvoiceTab('lines')">Invoice Line</button>
-          <button type="button" class="generate-invoice-tab" id="generate-invoice-journal-tab" role="tab" aria-selected="false" aria-controls="generate-invoice-journal-panel" onclick="setGenerateInvoiceTab('journal')">Journal Items</button>
         </div>
         <section class="generate-invoice-panel" id="generate-invoice-lines-panel" role="tabpanel" aria-labelledby="generate-invoice-lines-tab">
           <div class="generate-invoice-table-wrap">
             <table class="generate-invoice-table">
-              <thead><tr><th>Product</th><th>Account</th><th>Quantity</th><th>Unit</th><th>Price</th><th>Amount</th><th aria-label="Actions"></th></tr></thead>
+              <thead><tr><th>Product</th><th>Quantity</th><th>Unit</th><th>Price</th><th>Amount</th><th aria-label="Actions"></th></tr></thead>
               <tbody id="generate-invoice-line-rows"></tbody>
             </table>
           </div>
@@ -1869,9 +2036,11 @@
       addGenerateInvoiceJournalRow();
     }
     function openInwardModal() {
-      openModal("Create Inward", ["Supplier / Union", "Product", "UOM", "Vehicle Registration No.", "Vehicle Type", "Weight", "Base FAT %", "Base SNF %", "Driver Name", "Driver Mobile No."]);
+      openModal("Create Inward", ["Supplier / Union", "Product", "UOM", "Vehicle Registration No.", "Vehicle Type", "Weight", "FAT %", "SNF %", "Driver Name", "Driver Mobile No."]);
       const modal = document.getElementById('modal-box');
       const container = document.getElementById('modal-fields-container');
+      container.classList.add('inward-fields');
+      modal.classList.add('inward-modal');
       const productGroup = container.children[1];
       productGroup.querySelector('input').remove();
       productGroup.insertAdjacentHTML('beforeend', `
@@ -1897,18 +2066,76 @@
         uomInput.value = selectedMaterial ? selectedMaterial.uom : '';
       });
       container.querySelectorAll('input, select').forEach(field => { field.required = true; });
-      container.querySelector('input[placeholder*="Gross Weighment"]').type = 'number';
-      container.querySelector('input[placeholder*="Gross Weighment"]').min = '0.01';
-      container.querySelector('input[placeholder*="Gross Weighment"]').step = 'any';
-      container.querySelector('input[placeholder*="Base FAT"]').type = 'number';
-      container.querySelector('input[placeholder*="Base FAT"]').min = '0';
-      container.querySelector('input[placeholder*="Base FAT"]').step = 'any';
-      container.querySelector('input[placeholder*="Base SNF"]').type = 'number';
-      container.querySelector('input[placeholder*="Base SNF"]').min = '0';
-      container.querySelector('input[placeholder*="Base SNF"]').step = 'any';
+      const weightInput = container.children[5].querySelector('input');
+      weightInput.type = 'number';
+      weightInput.min = '0.01';
+      weightInput.step = 'any';
+      const fatInput = container.children[6].querySelector('input');
+      fatInput.type = 'number';
+      fatInput.min = '0';
+      fatInput.max = '100';
+      fatInput.step = 'any';
+      fatInput.value = '';
+      fatInput.closest('.form-group').querySelector('.form-label').textContent = 'FAT % (Spec: ≥ 6.0%) *';
+      const fatQuantityGroup = document.createElement('div');
+      fatQuantityGroup.className = 'form-group';
+      fatQuantityGroup.innerHTML = `
+        <label class="form-label">Fat Quantity (kg)</label>
+        <input class="form-control" type="number" placeholder="Calculated from Weight and FAT %" readonly>
+      `;
+      const snfGroup = container.children[7];
+      fatQuantityGroup.classList.add('inward-quality-field');
+      const fatQuantityInput = fatQuantityGroup.querySelector('input');
+      fatQuantityInput.required = false;
+      const updateFatQuantity = () => {
+        const weight = Number(weightInput.value);
+        const fatPercent = Number(fatInput.value);
+        fatInput.setCustomValidity(fatInput.value && fatPercent > 100 ? 'FAT % cannot exceed 100.' : '');
+        fatQuantityInput.value = weightInput.value && fatInput.value
+          ? (weight * fatPercent / 100).toFixed(2)
+          : '';
+      };
+      weightInput.addEventListener('input', updateFatQuantity);
+      fatInput.addEventListener('input', updateFatQuantity);
+      snfGroup.querySelector('input').type = 'number';
+      snfGroup.querySelector('input').min = '0';
+      snfGroup.querySelector('input').step = 'any';
+      snfGroup.querySelector('input').value = '';
+      snfGroup.querySelector('.form-label').textContent = 'SNF % (Spec: ≥ 8.5%) *';
+      const acidityGroup = document.createElement('div');
+      acidityGroup.className = 'form-group inward-quality-field';
+      acidityGroup.innerHTML = `
+        <label class="form-label">Acidity % (Max 0.15%) *</label>
+        <input class="form-control" type="number" step="any" placeholder="Enter acidity">
+      `;
+      const temperatureGroup = document.createElement('div');
+      temperatureGroup.className = 'form-group inward-quality-field';
+      temperatureGroup.innerHTML = `
+        <label class="form-label">Temperature (°C) *</label>
+        <input class="form-control" type="number" step="any" placeholder="Enter temperature" required>
+      `;
+      acidityGroup.querySelector('input').required = true;
       container.querySelector('input[placeholder*="Driver Mobile"]').type = 'tel';
-      container.classList.add('inward-fields');
-      modal.classList.add('inward-modal');
+      const qualitySection = document.createElement('section');
+      qualitySection.className = 'inward-quality-section';
+      qualitySection.innerHTML = `
+        <h4 style="margin: 0 0 12px; color: #004B6E; font-size: 13px;">Quality Check</h4>
+        <p style="margin: -6px 0 12px; color: #64748B; font-size: 11px;">Record FAT and SNF readings, calculated fat quantity, and adulteration strip results.</p>
+        <div class="inward-quality-fields"></div>
+        <div style="margin-top: 14px;">
+          <span class="form-label" style="display: block; margin-bottom: 8px;">Adulteration Strip Verification</span>
+          <div class="inward-adulteration-checks">
+            <label class="inward-adulteration-check"><input type="checkbox" name="inward-strip-urea"> Urea: Pass</label>
+            <label class="inward-adulteration-check"><input type="checkbox" name="inward-strip-detergent"> Detergent: Pass</label>
+            <label class="inward-adulteration-check"><input type="checkbox" name="inward-strip-starch"> Starch/Flour: Pass</label>
+            <label class="inward-adulteration-check"><input type="checkbox" name="inward-strip-salt-soda"> Salt/Soda: Pass</label>
+          </div>
+          <p style="margin: 8px 0 0; color: #64748B; font-size: 10px;">Leave unchecked if the test is pending or did not pass.</p>
+        </div>
+      `;
+      const qualityFields = qualitySection.querySelector('.inward-quality-fields');
+      qualityFields.append(fatInput.closest('.form-group'), snfGroup, acidityGroup, temperatureGroup, fatQuantityGroup);
+      container.appendChild(qualitySection);
     }
     function setGenerateInvoiceTab(tab) {
       const showLines = tab === 'lines';
@@ -1923,7 +2150,6 @@
       const row = document.createElement('tr');
       row.innerHTML = `
         <td><input class="form-control invoice-line-product" type="text" placeholder="Product" required></td>
-        <td><input class="form-control" type="text" placeholder="Account" required></td>
         <td><input class="form-control" type="number" min="0.01" step="any" placeholder="Quantity" required></td>
         <td><select class="form-control" required>
           <option value="ml">ml</option><option value="gram">gram</option><option value="kg">kg</option><option value="L">L</option>
@@ -2312,9 +2538,14 @@
       modal.classList.add('qcp-modal');
     }
     function openBillModal() {
-      openModal("Add Bill", ["Vendor Name", "Bill Date", "Recipient Bank", "Due Date"]);
+      openModal("Add Bill", ["PO Number", "Vendor Name", "Bill Date", "Recipient Bank", "Due Date"]);
       const modal = document.getElementById('modal-box');
       const container = document.getElementById('modal-fields-container');
+      const poNumberGroup = container.children[0];
+      poNumberGroup.classList.add('document-number-field');
+      const poNumberInput = poNumberGroup.querySelector('input');
+      poNumberInput.value = `PO-${new Date().getFullYear()}-${String(Date.now()).slice(-6)}`;
+      poNumberInput.readOnly = true;
       const dateInputs = container.querySelectorAll('input[type="date"]');
       dateInputs.forEach(input => { input.required = true; });
       container.querySelectorAll('input').forEach(input => { input.required = true; });
@@ -2538,9 +2769,14 @@
       button.closest('tr').remove();
     }
     function openPurchaseOrderModal() {
-      openModal("Generate Purchase Order", ["Select Vendor", "Order Date", "Delivery Expected Date"]);
+      openModal("Generate Purchase Order", ["PO Number", "Select Vendor", "Order Date", "Delivery Expected Date"]);
       const modal = document.getElementById('modal-box');
       const container = document.getElementById('modal-fields-container');
+      const poNumberGroup = container.children[0];
+      poNumberGroup.classList.add('document-number-field');
+      const poNumberInput = poNumberGroup.querySelector('input');
+      poNumberInput.value = `PO-${new Date().getFullYear()}-${String(Date.now()).slice(-6)}`;
+      poNumberInput.readOnly = true;
       container.classList.add('rfq-fields-grid');
       const productSection = document.createElement('div');
       productSection.className = 'rfq-product-section';
@@ -2642,7 +2878,7 @@
       if (activeModalConfig) {
         if (activeModalConfig.title.includes('(RFQ)') || activeModalConfig.title === 'Book Customer Order' || activeModalConfig.title === 'Generate Purchase Order' || activeModalConfig.title === 'Generate Invoice' || activeModalConfig.title === 'Create Inward' || activeModalConfig.title === 'Add Customer' || activeModalConfig.title === 'Add Customer Rate' || activeModalConfig.title === 'Initiate Production Work Order' || activeModalConfig.title === 'Create Bill of Materials (BOM)' || activeModalConfig.title === 'Add Quality Control Rule' || activeModalConfig.title === 'Add Bill' || activeModalConfig.title === 'Add New Product' || activeModalConfig.title === 'Log Internal Milk Transfer' || activeModalConfig.title === 'Adjust Storage Tank Level' || activeModalConfig.title === 'Add Expense' || activeModalConfig.title.startsWith('Collect Payment - ') || activeModalConfig.title.endsWith('Customer Category') || ['Add Expense Head', 'Map Expense Head', 'Add Excess Fund Head'].includes(activeModalConfig.title)) {
           if (activeModalConfig.title === 'Book Customer Order') {
-            const quantityInputs = [3, 4, 5].map(index => document.querySelectorAll('#modal-fields-container > .form-group')[index].querySelector('input'));
+            const quantityInputs = [4, 5, 6].map(index => document.querySelectorAll('#modal-fields-container > .form-group')[index].querySelector('input'));
             if (quantityInputs.every(input => Number(input.value) === 0)) {
               quantityInputs[0].setCustomValidity('Enter a quantity for at least one product.');
               quantityInputs[0].reportValidity();
@@ -2677,6 +2913,27 @@
               return;
             }
           }
+        }
+        if (activeModalConfig.title === 'Book Customer Order') {
+          const groups = document.querySelectorAll('#modal-fields-container > .form-group');
+          const orderType = groups[2].querySelector('input, select').value;
+          const frequency = orderType === 'Recurring' ? document.getElementById('sales-order-frequency').value : '';
+          salesOrderRecords.unshift({
+            number: groups[0].querySelector('input').value.trim(),
+            customer: groups[1].querySelector('input, select').value,
+            orderType,
+            frequency,
+            route: groups[3].querySelector('input, select').value,
+            standard: Number(groups[4].querySelector('input').value),
+            toned: Number(groups[5].querySelector('input').value),
+            paneer: Number(groups[6].querySelector('input').value),
+            shift: groups[7].querySelector('input, select').value,
+            status: 'APPROVED'
+          });
+          closeModal();
+          showToast('Sales order created successfully.');
+          renderWorkspace();
+          return;
         }
         if (activeModalConfig.title === 'Add Expense') {
           const [head, description, amount, date, paymentMode, concernedPerson] = Array.from(
@@ -2957,11 +3214,11 @@
       if (currentModule === 'Purchase' && currentSubMenu !== 'Purchase Report') {
         if (currentSubMenu === 'Raw Milk Intake') {
           renderTableScreen(viewport, "Raw Milk Intake", "supplier challan validation, and intake gating", "Create New Inward", openInwardModal, [
-            { label: "Ref No" }, { label: "Supplier / Vendor" },{ label:"Vehicle Type" }, { label: "Tanker No." }, { label: "Net Volume", align: "right" }, { label: "Tested FAT %", align: "right" }, { label: "Tested SNF %", align: "right" }, { label: "QC Lab Status", align: "center" }
+            { label: "Ref No" }, { label: "Supplier / Vendor" },{ label:"Vehicle Type" }, { label: "Vehicle No." }, { label: "Net Volume", align: "right" }, { label: "Tested FAT %", align: "right" }, { label: "Fat Quantity (kg)", align: "right" }, { label: "Tested SNF %", align: "right" }, { label: "QC Lab Status", align: "center" }
           ], [
-            ["INW-2026-0084", "Sangam Milk Producer Co-op", "Owned", "MH-04-GP-8812", "15,000 L", "6.20%", "8.85%", '<button class="badge badge-green" style="cursor:pointer; border:1px solid #A7E2B3;" onclick="currentModule=\'Quality\'; currentSubMenu=\'Inward Lab Gatekeeper\'; renderApp(); showToast(\'Navigated to Lab Ticket for INW-2026-0084\');">QC Lab Status: Passed ↗</button>'],
-            ["INW-2026-0083", "Kolhapur Dairy Union", "Owned", "MH-09-CV-4421", "9,500 L", "6.25%", "8.88%", '<button class="badge badge-green" style="cursor:pointer; border:1px solid #A7E2B3;" onclick="currentModule=\'Quality\'; currentSubMenu=\'Inward Lab Gatekeeper\'; renderApp(); showToast(\'Navigated to Lab Ticket for INW-2026-0083\');">QC Lab Status: Passed ↗</button>'],
-            ["INW-2026-0085", "Warana Milk Union","Hired", "MH-12-RN-7701", "12,400 L", "--", "--", '<button class="badge badge-blue" style="cursor:pointer; border:1px solid #BCE1F1;" onclick="currentModule=\'Quality\'; currentSubMenu=\'Inward Lab Gatekeeper\'; renderApp(); showToast(\'Opening Inward Lab Gatekeeper...\');">QC Lab Status: Pending ↗</button>']
+            ["INW-2026-0084", "Sangam Milk Producer Co-op", "Owned", "MH-04-GP-8812", "15,000 L", "6.20%", "930.00 kg", "8.85%", '<button class="badge badge-green" style="cursor:pointer; border:1px solid #A7E2B3;" onclick="currentModule=\'Quality\'; currentSubMenu=\'Inward Lab Gatekeeper\'; renderApp(); showToast(\'Navigated to Lab Ticket for INW-2026-0084\');">QC Lab Status: Passed ↗</button>'],
+            ["INW-2026-0083", "Kolhapur Dairy Union", "Owned", "MH-09-CV-4421", "9,500 L", "6.25%", "593.75 kg", "8.88%", '<button class="badge badge-green" style="cursor:pointer; border:1px solid #A7E2B3;" onclick="currentModule=\'Quality\'; currentSubMenu=\'Inward Lab Gatekeeper\'; renderApp(); showToast(\'Navigated to Lab Ticket for INW-2026-0083\');">QC Lab Status: Passed ↗</button>'],
+            ["INW-2026-0085", "Warana Milk Union","Hired", "MH-12-RN-7701", "12,400 L", "--", "—", "--", '<button class="badge badge-blue" style="cursor:pointer; border:1px solid #BCE1F1;" onclick="currentModule=\'Quality\'; currentSubMenu=\'Inward Lab Gatekeeper\'; renderApp(); showToast(\'Opening Inward Lab Gatekeeper...\');">QC Lab Status: Pending ↗</button>']
           ]);
           return;
         }
@@ -2983,15 +3240,6 @@
           ]);
           return;
         }
-        // Vendor Master (Base FAT% & Base SNF% removed from Add Modal and Table)
-        renderTableScreen(viewport, "Vendor Master & Rate Contracts", "Registered milk unions, suppliers and contractual procurement agreements", "Add Vendor", openVendorModal, [
-          { label: "Vendor Code" }, { label: "Vendor Name" }, { label: "Email Id" }, { label: "Phone No", align: "left" }, { label: "Country", align: "right" }, { label: "Status", align: "center" }
-        ], [
-          ["VND-101", "Sangam Milk Producer Co-op", "rawmilk@sangam.co.in", "9876543210", "India", '<span class="badge badge-green">ACTIVE</span>'],
-          ["VND-102", "Kolhapur Dairy Union", "info@kolhapurdairy.com", "9876543211", "India", '<span class="badge badge-green">ACTIVE</span>'],
-          ["VND-103", "PolyPack Films Ltd", "sales@polypackfilms.com", "9876543212", "India", '<span class="badge badge-green">ACTIVE</span>']
-        ]);
-        return;
       }
 
       // 3. SALES
@@ -2999,11 +3247,18 @@
         if (currentSubMenu === 'Sales Orders') {
           renderTableScreen(viewport, "Daily Customer Orders", "Customer demand indents locked before daily cutoff", "Create Order", openSalesOrderModal, [
             { label: "Order #" }, { label: "Customer Name" }, { label: "Order Type", align: "center" }, { label: "Route" }, { label: "Standard ", align: "right" }, { label: "Toned ", align: "right" }, { label: "Order Value (₹)", align: "right" }, { label: "Status", align: "center" }
-          ], [
-            ["SO-2026-901", "Mahalaxmi Super Market", '<span class="badge badge-blue">ONE-TIME</span>', "Route North-1", "25", "15", "₹ 18,400", '<span class="badge badge-green">APPROVED</span>'],
-            ["SO-2026-902", "Hotel Sai Palace", '<span class="badge badge-amber">RECURRING · DAILY</span>', "Route Central-2", "40", "20", "₹ 27,600", '<span class="badge badge-green">APPROVED</span>'],
-            ["SO-2026-903", "Shri Krishna Dairy Parlour", '<span class="badge badge-blue">ONE-TIME</span>', "Route South-3", "15", "10", "₹ 11,500", '<span class="badge badge-green">APPROVED</span>']
-          ]);
+          ], salesOrderRecords.map(order => [
+            order.number,
+            order.customer,
+            order.orderType === 'Recurring'
+              ? `<span class="badge badge-amber">RECURRING · ${order.frequency || 'SCHEDULED'}</span>`
+              : '<span class="badge badge-blue">ONE-TIME</span>',
+            order.route,
+            String(order.standard),
+            String(order.toned),
+            order.orderValue || '—',
+            `<span class="badge badge-green">${order.status}</span>`
+          ]));
           return;
         }
         if (currentSubMenu === 'Route Quotations') {
@@ -3016,17 +3271,26 @@
           return;
         }
         if (currentSubMenu === 'Customer Invoices') {
-          renderTableScreen(viewport, "Customer Tax Invoices (GST)", "Daily sales invoicing with direct Tally XML batch synchronization", "Generate Invoice", openGenerateInvoiceModal, [
-            { label: "Invoice No." }, { label: "Customer" }, { label: "GSTIN" }, { label: "Invoice Total (₹)", align: "right" }
+          renderTableScreen(viewport, "Customer Invoices", "Daily sales invoicing with direct Tally XML batch synchronization", "Generate Invoice", openGenerateInvoiceModal, [
+            { label: "Invoice No." }, { label: "Customer" }, { label: "Route" }, { label: "GSTIN" }, { label: "Invoice Total (₹)", align: "right" }
           ], [
-            ["INV-2026-1101", "Mahalaxmi Super Market", "27AABCU9603R1ZM", "₹ 18,400"],
-            ["INV-2026-1102", "Hotel Sai Palace", "27AAACH8821N1ZS", "₹ 27,600"],
-            ["INV-2026-1103", "Shri Krishna Dairy Parlour", "27AAAGS7712M1Z0", "₹ 11,500"]
+            ["INV-2026-1101", "Mahalaxmi Super Market", "Route North-1", "27AABCU9603R1ZM", "₹ 18,400"],
+            ["INV-2026-1102", "Hotel Sai Palace", "Route Central-2", "27AAACH8821N1ZS", "₹ 27,600"],
+            ["INV-2026-1103", "Shri Krishna Dairy Parlour", "Route South-3", "27AAAGS7712M1Z0", "₹ 11,500"]
+          ]);
+          return;
+        }
+        if (currentSubMenu === 'Billing') {
+          renderTableScreen(viewport, "Vendor Bills", "Vendor invoices, due dates, and payment status", "Add Bill", openBillModal, [
+            { label: "Bill No." }, { label: "Vendor Name" }, { label: "Bill Date" }, { label: "Due Date" }, { label: "Status", align: "center" }
+          ], [
+            ["BILL-2026-0018", "Sangam Milk Producer Co-op", "02 Nov 2026", "17 Nov 2026", '<span class="badge badge-amber">PENDING</span>'],
+            ["BILL-2026-0017", "PolyPack Films Ltd", "30 Oct 2026", "29 Nov 2026", '<span class="badge badge-green">PAID</span>']
           ]);
           return;
         }
         // Delivery Challans
-        renderTableScreen(viewport, "Vehicle Delivery Challans & Drop Balancing", "Dispatched crate counts, returned empty , and driver sign-off", "Print Challans", () => showToast("Printing all delivery challans..."), [
+        renderTableScreen(viewport, "Vehicle Delivery Challans & Drop Balancing", "Dispatched returned empty , and driver sign-off", "Print Challans", () => showToast("Printing all delivery challans..."), [
           { label: "Challan #" }, { label: "Route" }, { label: "Vehicle" }, { label: "Driver" },  { label: "Status", align: "left" }
         ], [
           ["DC-261028-01", "Route North-1", "MH-04-GP-1204", "S. Pawar", '<span class="badge badge-green">Dispatched</span>'],
@@ -3232,11 +3496,11 @@
         }
         //  Inventory
         renderTableScreen(viewport, " Inventory Ledger", "Plant secondary  vs. route circulating  vs. customer holdings", "Audit  Count", () => openModal("Reconcile  Ledger", [" Type", "Plant Physical Count", "Auditor Name"]), [
-          { label: "Location / Custody" }, { label: "Total Crates" }, { label: "Good Condition", align: "right" }, { label: "Damaged / Repair", align: "right" }, { label: "Status", align: "center" }
+          { label: "Location / Custody" }, { label: "Total " }, { label: "Good Condition", align: "right" }, { label: "Damaged / Repair", align: "right" }, { label: "Status", align: "center" }
         ], [
-          ["Inside Plant (Washed)", "3,450 Crates", "3,400", "50", '<span class="badge badge-green">BALANCED</span>'],
-          ["On Route (Delivery Trucks)", "4,200 Crates", "4,200", "0", '<span class="badge badge-blue">IN CIRCULATION</span>'],
-          ["With Dealers / Outlets", "2,350 Crates", "2,350", "0", '<span class="badge badge-amber">OUTSTANDING</span>']
+          ["Inside Plant (Washed)", "3,450 ", "3,400", "50", '<span class="badge badge-green">BALANCED</span>'],
+          ["On Route (Delivery Trucks)", "4,200 ", "4,200", "0", '<span class="badge badge-blue">IN CIRCULATION</span>'],
+          ["With Dealers / Outlets", "2,350 ", "2,350", "0", '<span class="badge badge-amber">OUTSTANDING</span>']
         ]);
         return;
       }
@@ -3347,15 +3611,6 @@
           ]);
           return;
         }
-        if (currentSubMenu === 'Billing') {
-          renderTableScreen(viewport, "Vendor Bills", "Vendor invoices, due dates, and payment status", "Add Bill", openBillModal, [
-            { label: "Bill No." }, { label: "Vendor Name" }, { label: "Bill Date" }, { label: "Due Date" }, { label: "Status", align: "center" }
-          ], [
-            ["BILL-2026-0018", "Sangam Milk Producer Co-op", "02 Nov 2026", "17 Nov 2026", '<span class="badge badge-amber">PENDING</span>'],
-            ["BILL-2026-0017", "PolyPack Films Ltd", "30 Oct 2026", "29 Nov 2026", '<span class="badge badge-green">PAID</span>']
-          ]);
-          return;
-        }
         // Customer Ledgers
         renderTableScreen(viewport, "Customer Ledgers & Credit Control", "Outstanding balance, credit days, and credit stop rules", "Record Payment", openCustomerLedgerPaymentModal, [
           { label: "Customer Name" }, { label: "Category" }, { label: "Outstanding (₹)", align: "right" }, { label: "Credit Limit (₹)", align: "right" }, { label: "Payment Mode", align: "center" }, { label: "Credit Status", align: "center" }
@@ -3373,24 +3628,24 @@
           'Purchase Report': {
             title: "Milk Purchase & Inward Report",
             desc: "Review supplier deliveries, milk quality, agreed rate, and purchase value.",
-            headers: [{ label: "Supplier" }, { label: "Received Date" }, { label: "Received Volume (L)", align: "right" }, { label: "Avg FAT (%)", align: "right" }, { label: "Avg SNF (%)", align: "right" }, { label: "Rate (₹/L)", align: "right" }, { label: "Purchase Value (₹)", align: "right" }, { label: "Quality Status", align: "center" }],
+            headers: [{ label: "Supplier" }, { label: "Received Date" }, { label: "Received Volume (L)", align: "right" }, { label: "Avg FAT (%)", align: "right" }, { label: "Fat Quantity (kg)", align: "right" }, { label: "Avg SNF (%)", align: "right" }, { label: "Rate (₹/L)", align: "right" }, { label: "Purchase Value (₹)", align: "right" }, { label: "Quality Status", align: "center" }],
             charts: {
               line: { title: "Inward Volume by Supplier (L)", categories: ["Sangam Co-op", "Kolhapur Union", "North Centre"], series: [{ name: "Volume (L)", values: [15000, 9500, 8200], color: "#004B6E" }] },
               pie: { title: "Share of Total Milk Inward", slices: [{ label: "Sangam Co-op", value: 15000 }, { label: "Kolhapur Union", value: 9500 }, { label: "North Centre", value: 8200 }] }
             },
             rows: [
-              ["Sangam Milk Producer Co-op", "04 Nov 2026", "15,000", "6.20", "8.85", "48.50", "₹ 7,27,500", '<span class="badge badge-green">ACCEPTED</span>'],
-              ["Kolhapur Dairy Union", "04 Nov 2026", "9,500", "6.25", "8.88", "47.50", "₹ 4,51,250", '<span class="badge badge-green">ACCEPTED</span>'],
-              ["North Chilling Centre", "03 Nov 2026", "8,200", "6.10", "8.72", "46.00", "₹ 3,77,200", '<span class="badge badge-amber">REVIEW</span>']
+              ["Sangam Milk Producer Co-op", "04 Nov 2026", "15,000", "6.20", "930.00", "8.85", "48.50", "₹ 7,27,500", '<span class="badge badge-green">ACCEPTED</span>'],
+              ["Kolhapur Dairy Union", "04 Nov 2026", "9,500", "6.25", "593.75", "8.88", "47.50", "₹ 4,51,250", '<span class="badge badge-green">ACCEPTED</span>'],
+              ["North Chilling Centre", "03 Nov 2026", "8,200", "6.10", "500.20", "8.72", "46.00", "₹ 3,77,200", '<span class="badge badge-amber">REVIEW</span>']
             ]
           },
           'Sales Report': {
             title: "Sales & Route Delivery Report",
-            desc: "Compare dispatched and delivered , outlet coverage, and route sales.",
-            headers: [{ label: "Route" }, { label: "Dispatch Date" }, { label: "Outlets Served", align: "right" }, { label: "Standard Milk ", align: "right" }, { label: "Toned Milk ", align: "right" }, { label: "Total Dispatched ", align: "right" }, { label: "Delivered ", align: "right" }, { label: "Sales Value (₹)", align: "right" }],
+            desc: "Summarize route sales, outlet coverage, dispatched quantity, and deliveries.",
+            headers: [{ label: "Route" }, { label: "Dispatch Date" }, { label: "Customers Served", align: "right" }, { label: "Standard Milk (L)", align: "right" }, { label: "Toned Milk (L)", align: "right" }, { label: "Total Dispatched (L)", align: "right" }, { label: "Delivered (L)", align: "right" }, { label: "Sales Value (₹)", align: "right" }],
             charts: {
-              line: { title: "Delivered Crates by Route", categories: ["North-1", "Central-2", "South-3"], series: [{ name: "Delivered ()", values: [156, 194, 127], color: "#2E9E40" }] },
-              pie: { title: "Delivered  Share by Route", slices: [{ label: "North-1", value: 156 }, { label: "Central-2", value: 194 }, { label: "South-3", value: 127 }] }
+              line: { title: "Delivered Quantity by Route (L)", categories: ["North-1", "Central-2", "South-3"], series: [{ name: "Delivered (L)", values: [156, 194, 127], color: "#2E9E40" }] },
+              pie: { title: "Delivered Quantity Share by Route (L)", slices: [{ label: "North-1", value: 156 }, { label: "Central-2", value: 194 }, { label: "South-3", value: 127 }] }
             },
             rows: [
               ["Route North-1", "04 Nov 2026", "16", "80", "80", "160", "156", "₹ 1,84,000"],
@@ -3417,12 +3672,12 @@
             desc: "Review opening stock, receipts or production, dispatches, and current closing balance.",
             headers: [{ label: "Item / SKU" }, { label: "Unit" }, { label: "Opening Stock", align: "right" }, { label: "Received / Produced", align: "right" }, { label: "Issued / Dispatched", align: "right" }, { label: "Closing Stock", align: "right" }, { label: "Stock Status", align: "center" }],
             charts: {
-              line: { title: "Standard Milk  Movement", categories: ["Opening", "Produced", "Dispatched", "Closing"], series: [{ name: "Crates", values: [200, 1200, 1150, 250], color: "#004B6E" }] },
+              line: { title: "Standard Milk  Movement", categories: ["Opening", "Produced", "Dispatched", "Closing"], series: [{ name: "", values: [200, 1200, 1150, 250], color: "#004B6E" }] },
               pie: { title: "Items by Stock Status", slices: [{ label: "Sufficient", value: 2 }, { label: "Low stock", value: 1 }] }
             },
             rows: [
               ["Raw Whole Milk", "L", "8,200", "24,500", "14,300", "18,400", '<span class="badge badge-green">SUFFICIENT</span>'],
-              ["Standard Milk 1L", "Crates", "200", "1,200", "1,150", "250", '<span class="badge badge-amber">LOW STOCK</span>'],
+              ["Standard Milk 1L", "", "200", "1,200", "1,150", "250", '<span class="badge badge-amber">LOW STOCK</span>'],
               ["Pure Cow Ghee 1L Jar", "Cartons", "90", "180", "120", "150", '<span class="badge badge-green">SUFFICIENT</span>']
             ]
           },
@@ -3456,6 +3711,7 @@
           }
         };
         const rep = reportData[currentSubMenu] || reportData['Purchase Report'];
+        const reportSummary = summarizeReport(currentSubMenu, rep.rows);
         if (reportViewState.reportName !== currentSubMenu) {
           reportViewState = { reportName: currentSubMenu, viewMode: 'table', chartType: 'line' };
         }
@@ -3466,7 +3722,7 @@
             reportViewState = { reportName: currentSubMenu, viewMode, chartType };
             renderWorkspace();
           }
-        });
+        }, reportSummary);
         return;
       }
 
@@ -3478,6 +3734,16 @@
           ], [
             ["PL01", "Central Processing Facility", "Plant", "+91 98000 00000", "plant.demo@example-dairy.com"],
             ["CC02", "North Chilling Centre", "Chilling Centre", "+91 98000 00001", "north.cc@example-dairy.com"]
+          ]);
+          return;
+        }
+        if (currentSubMenu === 'Vendor Master') {
+          renderTableScreen(viewport, "Vendor Master & Rate Contracts", "Registered milk unions, suppliers and contractual procurement agreements", "Add Vendor", openVendorModal, [
+            { label: "Vendor Code" }, { label: "Vendor Name" }, { label: "Email Id" }, { label: "Phone No", align: "left" }, { label: "Country", align: "right" }, { label: "Status", align: "center" }
+          ], [
+            ["VND-101", "Sangam Milk Producer Co-op", "rawmilk@sangam.co.in", "9876543210", "India", '<span class="badge badge-green">ACTIVE</span>'],
+            ["VND-102", "Kolhapur Dairy Union", "info@kolhapurdairy.com", "9876543211", "India", '<span class="badge badge-green">ACTIVE</span>'],
+            ["VND-103", "PolyPack Films Ltd", "sales@polypackfilms.com", "9876543212", "India", '<span class="badge badge-green">ACTIVE</span>']
           ]);
           return;
         }
@@ -3981,8 +4247,117 @@
       return toolbar;
     }
 
+    function createTableFilterBar() {
+      const filterBar = document.createElement('div');
+      filterBar.className = 'table-filter-bar';
+      filterBar.innerHTML = `
+        <div class="table-filter-field">
+          <label>Search</label>
+          <input class="form-control" type="search" placeholder="Search by name or text">
+        </div>
+        <div class="table-filter-field">
+          <label>Date Filter</label>
+          <select class="form-control">
+            <option value="">Select date range</option>
+            <option>Today</option>
+            <option>Yesterday</option>
+            <option>This Week</option>
+            <option>Last Week</option>
+            <option>Last Month</option>
+            <option>Last Year</option>
+            <option>Custom Range</option>
+          </select>
+        </div>
+        <div class="table-filter-field">
+          <label>From Date</label>
+          <input class="form-control" type="date">
+        </div>
+        <div class="table-filter-field">
+          <label>To Date</label>
+          <input class="form-control" type="date">
+        </div>
+        <button type="button" class="btn-primary">Filter</button>
+      `;
+      return filterBar;
+    }
+
+    function summarizeReport(reportName, rows) {
+      const number = value => Number(String(value).replace(/<[^>]*>/g, '').replace(/[^\d.-]/g, '')) || 0;
+      const format = value => value.toLocaleString('en-IN');
+      const money = value => `₹ ${format(value)}`;
+      const countStatuses = (index, status) => rows.filter(row =>
+        String(row[index]).replace(/<[^>]*>/g, '').toLowerCase().includes(status)
+      ).length;
+
+      switch (reportName) {
+        case 'Purchase Report': {
+          const volume = rows.reduce((total, row) => total + number(row[2]), 0);
+          const fatQuantity = rows.reduce((total, row) => total + number(row[4]), 0);
+          const purchaseValue = rows.reduce((total, row) => total + number(row[7]), 0);
+          return [
+            { label: 'Suppliers / Centres', value: format(rows.length) },
+            { label: 'Milk Received', value: `${format(volume)} L` },
+            { label: 'Fat Quantity', value: `${format(fatQuantity)} kg` },
+            { label: 'Purchase Value', value: money(purchaseValue) },
+            { label: 'Accepted Deliveries', value: format(countStatuses(8, 'accepted')) },
+            { label: 'Needs Review', value: format(countStatuses(8, 'review')) }
+          ];
+        }
+        case 'Sales Report': {
+          const outlets = rows.reduce((total, row) => total + number(row[2]), 0);
+          const dispatched = rows.reduce((total, row) => total + number(row[5]), 0);
+          const delivered = rows.reduce((total, row) => total + number(row[6]), 0);
+          const sales = rows.reduce((total, row) => total + number(row[7]), 0);
+          return [
+            { label: 'Total Sales Value', value: money(sales) },
+            { label: 'Total Delivered', value: `${format(delivered)} L` },
+            { label: 'Total Dispatched', value: `${format(dispatched)} L` },
+            { label: 'Customers Served', value: format(outlets) },
+            { label: 'Delivery Rate', value: `${dispatched ? (delivered / dispatched * 100).toFixed(1) : '0.0'}%` }
+          ];
+        }
+        case 'Manufacturing Report': {
+          const achievement = rows.reduce((total, row) => total + number(row[5]), 0);
+          return [
+            { label: 'Production Orders', value: format(rows.length) },
+            { label: 'Average Achievement', value: `${rows.length ? (achievement / rows.length).toFixed(2) : '0.00'}%` },
+            { label: 'Completed Orders', value: format(countStatuses(6, 'completed')) },
+            { label: 'Orders for Review', value: format(countStatuses(6, 'review')) }
+          ];
+        }
+        case 'Stock Report':
+          return [
+            { label: 'Items Tracked', value: format(rows.length) },
+            { label: 'Sufficient Stock', value: format(countStatuses(6, 'sufficient')) },
+            { label: 'Low Stock Items', value: format(countStatuses(6, 'low stock')) }
+          ];
+        case 'Vehicle Management Report':
+          return [
+            { label: 'Total Trips', value: format(rows.length) },
+            { label: 'Distance Covered', value: `${format(rows.reduce((total, row) => total + number(row[4]), 0))} km` },
+            { label: 'Completed Trips', value: format(countStatuses(5, 'completed')) },
+            { label: 'On-Route Trips', value: format(countStatuses(5, 'on route')) }
+          ];
+        case 'Accounting Report': {
+          const expected = rows.reduce((total, row) => total + number(row[1]), 0);
+          const collected = rows.reduce((total, row) => total + number(row[6]), 0);
+          const variance = rows.reduce((total, row) => total + number(row[7]), 0);
+          return [
+            { label: 'Expected Collection', value: money(expected) },
+            { label: 'Total Collected', value: money(collected) },
+            { label: 'Collection Variance', value: money(variance) },
+            { label: 'Reconciled Routes', value: `${format(countStatuses(8, 'balanced'))} / ${format(rows.length)}` },
+            { label: 'Collection Rate', value: `${expected ? (collected / expected * 100).toFixed(1) : '0.0'}%` }
+          ];
+        }
+        default:
+          return [];
+      }
+    }
+
     // Helper to render table cards
-    function renderTableScreen(viewport, title, desc, btnLabel, btnAction, headers, rows, reportCharts = null, reportViewOptions = null) {
+    function renderTableScreen(viewport, title, desc, btnLabel, btnAction, headers, rows, reportCharts = null, reportViewOptions = null, reportSummary = null) {
+      viewport.innerHTML = '';
       const card = document.createElement('div');
       card.className = 'card';
 
@@ -4003,6 +4378,26 @@
         headerRow.appendChild(btn);
       }
       card.appendChild(headerRow);
+      if (reportSummary) {
+        const summaryGrid = document.createElement('div');
+        summaryGrid.className = 'report-summary-grid';
+        reportSummary.forEach(metric => {
+          const metricCard = document.createElement('div');
+          metricCard.className = 'report-summary-card';
+          const label = document.createElement('div');
+          label.className = 'report-summary-label';
+          label.textContent = metric.label;
+          const value = document.createElement('div');
+          value.className = 'report-summary-value';
+          value.textContent = metric.value;
+          metricCard.append(label, value);
+          summaryGrid.appendChild(metricCard);
+        });
+        card.appendChild(summaryGrid);
+      }
+      if (reportCharts && reportViewOptions) {
+        card.appendChild(createTableFilterBar());
+      }
       if (reportCharts && reportViewOptions) {
         card.appendChild(createReportViewToolbar(reportViewOptions));
         const chartArea = document.createElement('div');
@@ -4010,6 +4405,10 @@
         chartArea.hidden = reportViewOptions.viewMode !== 'graph';
         chartArea.appendChild(renderReportCharts(reportCharts, reportViewOptions.chartType));
         card.appendChild(chartArea);
+      }
+
+      if (!reportCharts || !reportViewOptions) {
+        card.appendChild(createTableFilterBar());
       }
 
       const tableBox = document.createElement('div');
@@ -4039,7 +4438,6 @@
       tableBox.innerHTML = tableHtml;
       card.appendChild(tableBox);
 
-      viewport.innerHTML = '';
       viewport.appendChild(card);
     }
 
