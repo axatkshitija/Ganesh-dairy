@@ -1302,6 +1302,7 @@
     let openMasterGroup = 'Product';
     let paymentModeOpen = false;
     let reportViewState = { reportName: '', viewMode: 'table', chartType: 'line' };
+    let salesReportFilterState = { route: '', product: '', dateRange: '', fromDate: '', toDate: '' };
     let customerRecords = [
       { name: 'Mahalaxmi Super Market', type: 'Dealer (Wholesale Distributor)', contact: 'A. Patil', mobile: '9876543210', email: 'accounts@mahalaxmi.example', gstin: '27AABCU9603R1ZM', address: 'Market Road, Nashik' },
       { name: 'Hotel Sai Palace', type: 'Hotel & Institutional (Catering/Bulk)', contact: 'S. Deshmukh', mobile: '9876501234', email: 'purchase@saipalace.example', gstin: '27AACCS1234K1Z4', address: 'Station Road, Pune' },
@@ -2092,7 +2093,7 @@
           </div>
           <div class="table-container">
             <table class="data-table">
-              <thead><tr><th>Expense No.</th><th>Date</th><th>Expense Head</th><th>Description</th><th class="text-right">Amount (₹)</th><th>Payment Mode</th><th>Concerned Person</th></tr></thead>
+              <thead><tr><th>Voucher No.</th><th>Date</th><th>Expense Head</th><th>Description</th><th class="text-right">Amount (₹)</th><th>Payment Mode</th><th>Concerned Person</th></tr></thead>
               <tbody id="expense-search-rows"></tbody>
             </table>
           </div>
@@ -3685,11 +3686,11 @@
         }
         // Delivery Challans
         renderTableScreen(viewport, "Vehicle Delivery Challans & Drop Balancing", "Dispatched returned empty , and driver sign-off", "Print Challans", () => showToast("Printing all delivery challans..."), [
-          { label: "Challan" }, { label: "Route" }, { label: "Vehicle" }, { label: "Driver" },  { label: "Status", align: "left" }
+          { label: "Challan" }, { label: "Invoice Date" }, { label: "Delivery Date" }, { label: "Route" }, { label: "Vehicle" }, { label: "Driver" }, { label: "Status", align: "left" }
         ], [
-          ["DC-261028-01", "Route North-1", "MH-04-GP-1204", "S. Pawar", '<span class="badge badge-green">Dispatched</span>'],
-          ["DC-261028-02", "Route Central-2", "MH-46-BB-8812", "K. More",  '<span class="badge badge-amber">Loading</span>'],
-          ["DC-261028-03", "Route South-3", "MH-04-AX-5531", "R. Kadam",  '<span class="badge badge-blue">Scheduled</span>']
+          ["DC-261028-01", "27 Oct 2026", "28 Oct 2026", "Route North-1", "MH-04-GP-1204", "S. Pawar", '<span class="badge badge-green">Dispatched</span>'],
+          ["DC-261028-02", "27 Oct 2026", "28 Oct 2026", "Route Central-2", "MH-46-BB-8812", "K. More", '<span class="badge badge-amber">Loading</span>'],
+          ["DC-261028-03", "28 Oct 2026", "29 Oct 2026", "Route South-3", "MH-04-AX-5531", "R. Kadam", '<span class="badge badge-blue">Scheduled</span>']
         ]);
         return;
       }
@@ -4029,16 +4030,16 @@
           },
           'Sales Report': {
             title: "Sales & Route Delivery Report",
-            desc: "Summarize route sales, outlet coverage, dispatched quantity, and deliveries.",
-            headers: [{ label: "Route" }, { label: "Dispatch Date" }, { label: "Customers Served", align: "right" }, { label: "Standard Milk (L)", align: "right" }, { label: "Toned Milk (L)", align: "right" }, { label: "Total Dispatched (L)", align: "right" }, { label: "Delivered (L)", align: "right" }, { label: "Sales Value (₹)", align: "right" }],
-            charts: {
-              line: { title: "Delivered Quantity by Route (L)", categories: ["North-1", "Central-2", "South-3"], series: [{ name: "Delivered (L)", values: [156, 194, 127], color: "#2E9E40" }] },
-              pie: { title: "Delivered Quantity Share by Route (L)", slices: [{ label: "North-1", value: 156 }, { label: "Central-2", value: 194 }, { label: "South-3", value: 127 }] }
-            },
+            desc: "Filter dispatch, delivered quantity, and sales by route and product.",
+            headers: [],
+            charts: { line: { title: '', categories: [], series: [] }, pie: { title: '', slices: [] } },
             rows: [
-              ["Route North-1", "04 Nov 2026", "16", "80", "80", "160", "156", "₹ 1,84,000"],
-              ["Route Central-2", "04 Nov 2026", "20", "100", "100", "200", "194", "₹ 2,30,000"],
-              ["Route South-3", "04 Nov 2026", "14", "70", "60", "130", "127", "₹ 1,49,500"]
+              ["Route North-1", "04 Nov 2026", "Standard Milk", "16", "80", "78", "₹ 92,000"],
+              ["Route North-1", "04 Nov 2026", "Toned Milk", "16", "80", "78", "₹ 92,000"],
+              ["Route Central-2", "04 Nov 2026", "Standard Milk", "20", "100", "98", "₹ 1,15,000"],
+              ["Route Central-2", "04 Nov 2026", "Toned Milk", "20", "100", "96", "₹ 1,15,000"],
+              ["Route South-3", "04 Nov 2026", "Standard Milk", "14", "70", "68", "₹ 80,500"],
+              ["Route South-3", "04 Nov 2026", "Toned Milk", "14", "60", "59", "₹ 69,000"]
             ]
           },
           'Manufacturing Report': {
@@ -4099,10 +4100,62 @@
           }
         };
         const rep = reportData[currentSubMenu] || reportData['Purchase Report'];
-        const reportSummary = summarizeReport(currentSubMenu, rep.rows);
         if (reportViewState.reportName !== currentSubMenu) {
           reportViewState = { reportName: currentSubMenu, viewMode: 'table', chartType: 'line' };
+          if (currentSubMenu === 'Sales Report') salesReportFilterState = { route: '', product: '', dateRange: '', fromDate: '', toDate: '' };
         }
+        let reportFilterBar = null;
+        if (currentSubMenu === 'Sales Report') {
+          const allSalesRows = rep.rows;
+          const routes = [...new Set(allSalesRows.map(row => row[0]))];
+          const products = [...new Set(allSalesRows.map(row => row[2]))];
+          const filteredRows = allSalesRows.filter(row =>
+            (!salesReportFilterState.route || row[0] === salesReportFilterState.route) &&
+            (!salesReportFilterState.product || row[2] === salesReportFilterState.product) &&
+            (!salesReportFilterState.fromDate || salesReportDateToIso(row[1]) >= salesReportFilterState.fromDate) &&
+            (!salesReportFilterState.toDate || salesReportDateToIso(row[1]) <= salesReportFilterState.toDate)
+          );
+          rep.headers = [
+            { label: 'Route' }, { label: 'Dispatch Date' }, { label: 'Product' },
+            { label: 'Customers Served', align: 'right' }, { label: 'Dispatched (L)', align: 'right' },
+            { label: 'Delivered (L)', align: 'right' }, { label: 'Sales Value (₹)', align: 'right' }
+          ];
+          rep.rows = filteredRows;
+          const filteredRoutes = [...new Set(filteredRows.map(row => row[0]))];
+          const filteredProducts = [...new Set(filteredRows.map(row => row[2]))];
+          const chartRoutes = filteredRoutes.length ? filteredRoutes : ['No Data'];
+          const chartProducts = filteredProducts.length ? filteredProducts : ['No Data'];
+          const productColors = ['#004B6E', '#2E9E40', '#F59E0B', '#8B5CF6'];
+          rep.charts = {
+            line: {
+              title: 'Delivered Quantity by Route and Product (L)',
+              categories: chartRoutes.map(route => route.replace('Route ', '')),
+              series: chartProducts.map((product, index) => ({
+                name: product,
+                color: productColors[index % productColors.length],
+                values: chartRoutes.map(route => filteredRows
+                  .filter(row => row[0] === route && row[2] === product)
+                  .reduce((total, row) => total + Number(row[5].replace(/,/g, '')), 0))
+              }))
+            },
+            pie: {
+              title: 'Delivered Quantity by Product (L)',
+              slices: filteredProducts.length
+                ? filteredProducts.map((product, index) => ({
+                    label: product,
+                    value: filteredRows
+                      .filter(row => row[2] === product)
+                      .reduce((total, row) => total + Number(row[5].replace(/,/g, '')), 0)
+                  }))
+                : [{ label: 'No matching data', value: 1 }]
+            }
+          };
+          reportFilterBar = createSalesReportFilterBar(routes, products, salesReportFilterState, (updatedFilters) => {
+            salesReportFilterState = { ...salesReportFilterState, ...updatedFilters };
+            renderWorkspace();
+          });
+        }
+        const reportSummary = summarizeReport(currentSubMenu, rep.rows);
         renderTableScreen(viewport, rep.title, rep.desc, "Download CSV", () => downloadReportCsv(rep), rep.headers, rep.rows, rep.charts, {
           viewMode: reportViewState.viewMode,
           chartType: reportViewState.chartType,
@@ -4110,7 +4163,7 @@
             reportViewState = { reportName: currentSubMenu, viewMode, chartType };
             renderWorkspace();
           }
-        }, reportSummary);
+        }, reportSummary, reportFilterBar);
         return;
       }
 
@@ -4639,6 +4692,116 @@
       return toolbar;
     }
 
+    function salesReportDateToIso(displayDate) {
+      const [day, monthName, year] = displayDate.split(' ');
+      const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].indexOf(monthName);
+      if (month < 0) return '';
+      return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    }
+
+    function getSalesReportDateRange(range) {
+      const toIso = date => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+      const today = new Date();
+      const end = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      const start = new Date(end);
+      if (range === 'Today') {
+        // Keep start and end on today.
+      } else if (range === 'Yesterday') {
+        start.setDate(start.getDate() - 1);
+        end.setDate(end.getDate() - 1);
+      } else if (range === 'This Week') {
+        start.setDate(start.getDate() - ((start.getDay() + 6) % 7));
+      } else if (range === 'Last Week') {
+        start.setDate(start.getDate() - ((start.getDay() + 6) % 7) - 7);
+        end.setTime(start.getTime());
+        end.setDate(end.getDate() + 6);
+      } else if (range === 'Last Month') {
+        start.setDate(1);
+        start.setMonth(start.getMonth() - 1);
+        end.setDate(0);
+      } else if (range === 'Last Year') {
+        start.setFullYear(start.getFullYear() - 1, 0, 1);
+        end.setFullYear(end.getFullYear() - 1, 11, 31);
+      } else {
+        return { fromDate: '', toDate: '' };
+      }
+      return { fromDate: toIso(start), toDate: toIso(end) };
+    }
+
+    function createSalesReportFilterBar(routes, products, selectedFilters, onChange) {
+      const filterBar = document.createElement('div');
+      filterBar.className = 'table-filter-bar';
+      [
+        { label: 'Route', key: 'route', options: routes },
+        { label: 'Product', key: 'product', options: products }
+      ].forEach(filter => {
+        const field = document.createElement('div');
+        field.className = 'table-filter-field';
+        const label = document.createElement('label');
+        label.textContent = `${filter.label} Filter`;
+        const select = document.createElement('select');
+        select.className = 'form-control';
+        const allOption = document.createElement('option');
+        allOption.value = '';
+        allOption.textContent = `All ${filter.label}s`;
+        select.appendChild(allOption);
+        filter.options.forEach(value => {
+          const option = document.createElement('option');
+          option.value = value;
+          option.textContent = value;
+          select.appendChild(option);
+        });
+        select.value = selectedFilters[filter.key];
+        select.addEventListener('change', () => onChange({ [filter.key]: select.value }));
+        field.append(label, select);
+        filterBar.appendChild(field);
+      });
+
+      const dateRangeField = document.createElement('div');
+      dateRangeField.className = 'table-filter-field';
+      dateRangeField.innerHTML = '<label>Date Filter</label>';
+      const dateRangeSelect = document.createElement('select');
+      dateRangeSelect.className = 'form-control';
+      [
+        ['', 'All Dates'], ['Today', 'Today'], ['Yesterday', 'Yesterday'], ['This Week', 'This Week'],
+        ['Last Week', 'Last Week'], ['Last Month', 'Last Month'], ['Last Year', 'Last Year'],
+        ['Custom Range', 'Custom Range']
+      ].forEach(([value, label]) => {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = label;
+        dateRangeSelect.appendChild(option);
+      });
+      dateRangeSelect.value = selectedFilters.dateRange;
+      dateRangeSelect.addEventListener('change', () => {
+        if (dateRangeSelect.value === 'Custom Range') {
+          onChange({ dateRange: dateRangeSelect.value });
+          return;
+        }
+        onChange({ dateRange: dateRangeSelect.value, ...getSalesReportDateRange(dateRangeSelect.value) });
+      });
+      dateRangeField.appendChild(dateRangeSelect);
+      filterBar.appendChild(dateRangeField);
+
+      [
+        { label: 'From Date', key: 'fromDate' },
+        { label: 'To Date', key: 'toDate' }
+      ].forEach(filter => {
+        const field = document.createElement('div');
+        field.className = 'table-filter-field';
+        const label = document.createElement('label');
+        label.textContent = filter.label;
+        const input = document.createElement('input');
+        input.className = 'form-control';
+        input.type = 'date';
+        input.value = selectedFilters[filter.key];
+        input.addEventListener('change', () => onChange({ [filter.key]: input.value, dateRange: 'Custom Range' }));
+        field.append(label, input);
+        filterBar.appendChild(field);
+      });
+      return filterBar;
+    }
+
     function createTableFilterBar() {
       const filterBar = document.createElement('div');
       filterBar.className = 'table-filter-bar';
@@ -4696,14 +4859,16 @@
           ];
         }
         case 'Sales Report': {
-          const outlets = rows.reduce((total, row) => total + number(row[2]), 0);
-          const dispatched = rows.reduce((total, row) => total + number(row[5]), 0);
-          const delivered = rows.reduce((total, row) => total + number(row[6]), 0);
-          const sales = rows.reduce((total, row) => total + number(row[7]), 0);
+          const customersByRoute = new Map(rows.map(row => [row[0], number(row[3])]));
+          const outlets = [...customersByRoute.values()].reduce((total, count) => total + count, 0);
+          const dispatched = rows.reduce((total, row) => total + number(row[4]), 0);
+          const delivered = rows.reduce((total, row) => total + number(row[5]), 0);
+          const sales = rows.reduce((total, row) => total + number(row[6]), 0);
+          const highlySoldProducts = new Set(rows.filter(row => number(row[5]) > 0).map(row => row[2])).size;
           return [
             { label: 'Total Sales Value', value: money(sales) },
             { label: 'Total Delivered', value: `${format(delivered)} L` },
-            { label: 'Total Dispatched', value: `${format(dispatched)} L` },
+            { label: 'Highly Sold Products', value: format(highlySoldProducts) },
             { label: 'Customers Served', value: format(outlets) },
             { label: 'Delivery Rate', value: `${dispatched ? (delivered / dispatched * 100).toFixed(1) : '0.0'}%` }
           ];
@@ -4749,7 +4914,7 @@
     }
 
     // Helper to render table cards
-    function renderTableScreen(viewport, title, desc, btnLabel, btnAction, headers, rows, reportCharts = null, reportViewOptions = null, reportSummary = null) {
+    function renderTableScreen(viewport, title, desc, btnLabel, btnAction, headers, rows, reportCharts = null, reportViewOptions = null, reportSummary = null, reportFilterBar = null) {
       viewport.innerHTML = '';
       const card = document.createElement('div');
       card.className = 'card';
@@ -4788,9 +4953,7 @@
         });
         card.appendChild(summaryGrid);
       }
-      if (reportCharts && reportViewOptions) {
-        card.appendChild(createTableFilterBar());
-      }
+      card.appendChild(reportFilterBar || createTableFilterBar());
       if (reportCharts && reportViewOptions) {
         card.appendChild(createReportViewToolbar(reportViewOptions));
         const chartArea = document.createElement('div');
@@ -4798,10 +4961,6 @@
         chartArea.hidden = reportViewOptions.viewMode !== 'graph';
         chartArea.appendChild(renderReportCharts(reportCharts, reportViewOptions.chartType));
         card.appendChild(chartArea);
-      }
-
-      if (!reportCharts || !reportViewOptions) {
-        card.appendChild(createTableFilterBar());
       }
 
       const tableBox = document.createElement('div');
