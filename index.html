@@ -622,13 +622,23 @@
     #modal-box {
       background: #FFFFFF;
       width: 100%;
-      max-width: 480px;
+      max-width: 640px;
+      max-height: calc(100vh - 32px);
+      overflow-y: auto;
+      overscroll-behavior: contain;
       border-radius: 16px;
-      padding: 24px;
+      padding: 20px;
       box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 12px;
+    }
+    #modal-box > p { margin: 0; }
+    #modal-fields-container {
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: start;
+      gap: 10px !important;
     }
     #modal-box.rfq-modal {
       max-width: 760px;
@@ -685,8 +695,66 @@
       overflow-y: auto;
       overscroll-behavior: contain;
     }
+    #modal-box.invoice-payment-modal {
+      max-width: 720px;
+      max-height: calc(100vh - 32px);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+    #modal-fields-container.invoice-payment-fields {
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: start;
+    }
+    #modal-fields-container.invoice-payment-fields > .form-group .form-control,
+    #invoice-payment-mode-fields .form-control,
+    .invoice-cash-note-section .form-control {
+      max-width: 260px;
+    }
+    #invoice-payment-mode-fields {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .invoice-cash-note-section {
+      grid-column: 1 / -1;
+    }
+    .cash-payment-note-section {
+      grid-column: 1 / -1;
+    }
+    .invoice-cash-note-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    #modal-box.customer-ledger-modal {
+      max-width: 720px;
+      max-height: calc(100vh - 32px);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+    #modal-fields-container.customer-ledger-fields {
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: start;
+    }
+    #modal-fields-container.customer-ledger-fields > .form-group .form-control {
+      max-width: 260px;
+    }
+    @media (max-width: 640px) {
+      #modal-fields-container.customer-ledger-fields {
+        grid-template-columns: 1fr;
+      }
+    }
     #modal-box.expense-modal {
       max-width: 640px;
+      max-height: calc(100vh - 32px);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+    #modal-box.product-master-modal {
+      max-width: 760px;
       max-height: calc(100vh - 32px);
       overflow-y: auto;
       overscroll-behavior: contain;
@@ -698,7 +766,7 @@
     }
     #modal-fields-container.work-order-fields {
       display: grid !important;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       align-items: start;
     }
     #modal-fields-container.work-order-fields > .form-group .form-control {
@@ -743,6 +811,14 @@
       display: grid !important;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       align-items: start;
+    }
+    #modal-fields-container.product-master-fields {
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: start;
+    }
+    #modal-fields-container.product-master-fields > .form-group .form-control {
+      max-width: none;
     }
     .sales-order-recurring-panel {
       grid-column: 1 / -1;
@@ -1026,6 +1102,9 @@
       align-items: end;
       gap: 8px;
     }
+    .rfq-product-row.bill-product-row {
+      grid-template-columns: minmax(130px, 1.5fr) repeat(6, minmax(82px, 1fr)) 32px;
+    }
     .rfq-total-panel {
       align-self: flex-end;
       padding: 6px 0;
@@ -1049,6 +1128,9 @@
     .rfq-remove-product:hover { color: #B91C1C; border-color: #FCA5A5; }
     .rfq-add-product { align-self: flex-start; }
     @media (max-width: 640px) {
+      #modal-fields-container { grid-template-columns: 1fr; }
+      #invoice-payment-mode-fields { grid-template-columns: 1fr; }
+      .invoice-cash-note-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       #modal-fields-container.rfq-fields-grid { grid-template-columns: 1fr; }
       #modal-fields-container.work-order-fields { grid-template-columns: 1fr; }
       #modal-fields-container.bom-fields { grid-template-columns: 1fr; }
@@ -1060,6 +1142,7 @@
       #modal-fields-container.inward-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .inward-quality-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       #modal-fields-container.sales-order-fields { grid-template-columns: 1fr; }
+      #modal-fields-container.product-master-fields { grid-template-columns: 1fr; }
       .rfq-product-row { grid-template-columns: 1fr 1fr; }
       .rfq-remove-product { grid-column: 2; justify-self: end; }
     }
@@ -1162,7 +1245,7 @@
         <button class="modal-close-btn" onclick="closeModal()">✕</button>
       </div>
       <p style="font-size: 12px; color: #64748B;">Enter the details below to record this transaction directly into the system ledger:</p>
-      <div id="modal-fields-container" style="display: flex; flex-direction: column; gap: 10px;">
+      <div id="modal-fields-container">
         <!-- Fields injected here -->
       </div>
       <div class="modal-actions">
@@ -1184,14 +1267,20 @@
       { name: 'Skimmed Milk Powder (SMP)', code: 'SMP-BAG-01', uom: 'KG', minFat: '0.50%', minSnf: '95.00%' },
       { name: 'White Butter', code: 'WB-BULK-01', uom: 'KG', minFat: '82.00%', minSnf: '1.50%' }
     ];
+    const productMasterRecords = [
+      { name: 'Standardised Toned Milk', category: 'Liquid Milk', costPrice: 42, salesPrice: '₹ 58.00', priceUom: '₹/L', shelfLife: '2 Days (Chilled)', stockUnit: 'L', currentStock: 4000, minimumStock: 5000 },
+      { name: 'Butter Milk 500 ml', category: 'Fermented Drinks', costPrice: 17, salesPrice: '₹ 25.00', priceUom: '₹/pack', shelfLife: '5 Days (Chilled)', stockUnit: 'pack', currentStock: 1800, minimumStock: 1000 },
+      { name: 'Pure Cow Ghee 1L', category: 'Fat Products', costPrice: 480, salesPrice: '₹ 620.00', priceUom: '₹/kg', shelfLife: '180 Days (Ambient)', stockUnit: 'kg', currentStock: 350, minimumStock: 200 },
+      { name: 'Fresh Paneer', category: 'Fresh Dairy', costPrice: 280, salesPrice: '₹ 360.00', priceUom: '₹/kg', shelfLife: '7 Days (Chilled)', stockUnit: 'kg', currentStock: 75, minimumStock: 100 }
+    ];
     const vehicleTypeOptions = ['Owned', 'Hired'];
     const systemModules = [
       { id: 'Home', label: 'Home', subMenus: ['Overview'] },
-      { id: 'Purchase', label: 'Purchase', subMenus: ['Raw Milk Intake', 'Purchase Orders', 'Purchase Report'] },
+      { id: 'Purchase', label: 'Purchase', subMenus: ['Raw Milk Intake', 'Purchase Orders', 'Billing', 'Purchase Report'] },
       { id: 'Quality', label: 'Quality', subMenus: ['Quality Control Points', 'Milk Inward Lab Check', 'Inspection Reports'] },
-      { id: 'Stock', label: 'Stock', subMenus: ['Storage Stock', 'Warehouse Operations', 'Internal Transfers', 'Stock Report'] },
+      { id: 'Stock', label: 'Stock', subMenus: ['Storage Stock','Warehouse Internal Transfer', 'Stock Report'] },
       { id: 'Manufacturing', label: 'Manufacturing', subMenus: ['Production Orders', 'Bill of Materials (BOM)', 'Batch Tracking', 'Manufacturing Report'] },
-      { id: 'Sales', label: 'Sales', subMenus: ['Sales Orders', 'Customer Invoices', 'Billing', 'Delivery Challans', 'Sales Report'] },
+      { id: 'Sales', label: 'Sales', subMenus: ['Sales Orders', 'Customer Invoices', 'Delivery Challans', 'Sales Report'] },
       { id: 'Vehicle management', label: 'Vehicle management', subMenus: ['Vehicle Registration', 'Route & Seal Management', 'Travel & Distance Record', 'Vehicle Management Report'] },
       { id: 'Accounting', label: 'Accounting', subMenus: ['Payment Mode',  'Bank Reconciliation', 'Customer Ledgers', 'Expenses', 'Accounting Report'] },
       { id: 'Masters', label: 'Masters', isMasters: true }
@@ -1217,6 +1306,16 @@
       { name: 'Mahalaxmi Super Market', type: 'Dealer (Wholesale Distributor)', contact: 'A. Patil', mobile: '9876543210', email: 'accounts@mahalaxmi.example', gstin: '27AABCU9603R1ZM', address: 'Market Road, Nashik' },
       { name: 'Hotel Sai Palace', type: 'Hotel & Institutional (Catering/Bulk)', contact: 'S. Deshmukh', mobile: '9876501234', email: 'purchase@saipalace.example', gstin: '27AACCS1234K1Z4', address: 'Station Road, Pune' },
       { name: 'Shri Krishna Dairy Parlour', type: 'Retail Counter (Company Owned)', contact: 'R. Jadhav', mobile: '9822012345', email: 'krishnaparlour@example.com', gstin: '', address: 'Main Bazaar, Thane' }
+    ];
+    let customerInvoiceRecords = [
+      { invoiceNo: 'INV-2026-1101', customer: 'Mahalaxmi Super Market', route: 'Route North-1', gstin: '27AABCU9603R1ZM', total: 18400, paid: 10000, payments: [] },
+      { invoiceNo: 'INV-2026-1102', customer: 'Hotel Sai Palace', route: 'Route Central-2', gstin: '27AAACH8821N1ZS', total: 27600, paid: 27600, payments: [] },
+      { invoiceNo: 'INV-2026-1103', customer: 'Shri Krishna Dairy Parlour', route: 'Route South-3', gstin: '27AAAGS7712M1Z0', total: 11500, paid: 0, payments: [] }
+    ];
+    let customerLedgerRecords = [
+      { customer: 'Mahalaxmi Super Market', category: 'Wholesale Dealer', invoiceAmount: 50000, receivedAmount: 25500 },
+      { customer: 'Hotel Sai Palace', category: 'Institutional', invoiceAmount: 30000, receivedAmount: 18000 },
+      { customer: 'Shri Krishna Dairy Parlour', category: 'Retail Outlet', invoiceAmount: 60000, receivedAmount: 11800 }
     ];
     let salesOrderRecords = [
       { number: 'SO-2026-901', customer: 'Mahalaxmi Super Market', orderType: 'One-Time', route: 'Route North-1', standard: 25, toned: 15, paneer: 0, shift: 'Morning', status: 'APPROVED' },
@@ -1451,6 +1550,7 @@
 
     // Modal Helpers
     let activeModalConfig = null;
+    let activeInvoicePaymentId = '';
     function openModal(title, fields) {
       activeModalConfig = { title, fields };
       document.getElementById('modal-box').classList.remove('rfq-modal');
@@ -1464,7 +1564,10 @@
       document.getElementById('modal-box').classList.remove('inward-modal');
       document.getElementById('modal-box').classList.remove('sales-order-modal');
       document.getElementById('modal-box').classList.remove('cash-payment-modal');
+      document.getElementById('modal-box').classList.remove('invoice-payment-modal');
+      document.getElementById('modal-box').classList.remove('customer-ledger-modal');
       document.getElementById('modal-box').classList.remove('expense-modal');
+      document.getElementById('modal-box').classList.remove('product-master-modal');
       document.getElementById('modal-title-text').innerText = title;
       const container = document.getElementById('modal-fields-container');
       container.classList.remove('rfq-fields-grid');
@@ -1477,6 +1580,9 @@
       container.classList.remove('generate-invoice-fields');
       container.classList.remove('inward-fields');
       container.classList.remove('sales-order-fields');
+      container.classList.remove('product-master-fields');
+      container.classList.remove('invoice-payment-fields');
+      container.classList.remove('customer-ledger-fields');
       container.innerHTML = '';
 
       fields.forEach(f => {
@@ -1493,6 +1599,116 @@
       });
 
       document.getElementById('modal-backdrop').style.display = 'flex';
+    }
+    function openInvoicePaymentModal(invoiceNo) {
+      const invoice = customerInvoiceRecords.find(record => record.invoiceNo === invoiceNo);
+      if (!invoice) {
+        showToast(`Invoice not found: ${invoiceNo}`);
+        return;
+      }
+      const outstanding = invoice.total - invoice.paid;
+      if (outstanding <= 0) {
+        showToast('This invoice has already been paid.');
+        return;
+      }
+
+      activeInvoicePaymentId = invoiceNo;
+      openModal('Receive Invoice Payment', ['Invoice No.', 'Customer', 'Invoice Total', 'Paid Amount', 'Outstanding Amount', 'Payment Mode', 'Amount to Receive']);
+      document.getElementById('modal-box').classList.add('invoice-payment-modal');
+      const container = document.getElementById('modal-fields-container');
+      container.classList.add('invoice-payment-fields');
+      const groups = Array.from(container.children);
+      [0, 1, 2, 3, 4].forEach((index) => {
+        const input = groups[index].querySelector('input');
+        input.value = [
+          invoice.invoiceNo,
+          invoice.customer,
+          invoice.total.toFixed(2),
+          invoice.paid.toFixed(2),
+          outstanding.toFixed(2)
+        ][index];
+        input.readOnly = true;
+        input.required = false;
+      });
+
+      const paymentModeGroup = groups[5];
+      paymentModeGroup.querySelector('input').remove();
+      paymentModeGroup.insertAdjacentHTML('beforeend', `
+        <select id="invoice-payment-mode" class="form-control" required>
+          <option value="">Select payment mode</option>
+          <option value="Cash">Cash</option>
+          <option value="UPI">UPI</option>
+          <option value="Online">Online</option>
+          <option value="Cheque">Cheque</option>
+        </select>
+      `);
+      const amountInput = groups[6].querySelector('input');
+      amountInput.type = 'number';
+      amountInput.min = '0.01';
+      amountInput.max = outstanding.toFixed(2);
+      amountInput.step = 'any';
+      amountInput.required = true;
+      amountInput.addEventListener('input', () => {
+        amountInput.setCustomValidity(Number(amountInput.value) > outstanding ? 'Payment cannot exceed the outstanding amount.' : '');
+      });
+      container.insertAdjacentHTML('beforeend', '<div id="invoice-payment-mode-fields" class="invoice-payment-mode-fields"></div>');
+      document.getElementById('invoice-payment-mode').addEventListener('change', updateInvoicePaymentModeFields);
+    }
+    function updateInvoicePaymentModeFields() {
+      const mode = document.getElementById('invoice-payment-mode')?.value;
+      const container = document.getElementById('invoice-payment-mode-fields');
+      if (!container) return;
+      container.innerHTML = '';
+      if (mode === 'UPI') {
+        container.innerHTML = '<div class="form-group"><label class="form-label">Transaction ID *</label><input id="invoice-payment-reference" class="form-control" required placeholder="Enter transaction ID"></div>';
+      } else if (mode === 'Cheque') {
+        container.innerHTML = '<div class="form-group"><label class="form-label">Cheque No *</label><input id="invoice-payment-reference" class="form-control" required placeholder="Enter cheque number"></div>';
+      } else if (mode === 'Online') {
+        container.innerHTML = `
+          <div class="form-group">
+            <label class="form-label">Type *</label>
+            <select id="invoice-payment-reference" class="form-control" required>
+              <option value="">Select online payment type</option>
+              <option value="Net Banking">Net Banking</option>
+              <option value="NEFT">NEFT</option>
+              <option value="RTGS">RTGS</option>
+              <option value="IMPS">IMPS</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Transaction ID</label>
+            <input id="invoice-payment-transaction-id" class="form-control" placeholder="Enter transaction ID">
+          </div>
+        `;
+      } else if (mode === 'Cash') {
+        const noteValues = [500, 200, 100, 50, 10];
+        container.innerHTML = `
+          <section class="invoice-cash-note-section" aria-label="Cash note count" style="border: 1px solid #E2E8F0; border-radius: 10px; padding: 14px; background: #F8FAFC;">
+            <h4 style="margin: 0 0 10px; color: #004B6E; font-size: 13px;">Cash Note Count</h4>
+            <div class="invoice-cash-note-grid">
+              ${noteValues.map(value => `
+                <div class="form-group" style="margin: 0;">
+                  <label class="form-label" for="invoice-cash-note-${value}">₹ ${value} notes</label>
+                  <input id="invoice-cash-note-${value}" class="form-control" type="number" min="0" step="1" value="0" inputmode="numeric">
+                </div>
+              `).join('')}
+            </div>
+            <div style="margin-top: 10px; text-align: right; font-weight: 700; color: #004B6E;">
+              Counted Cash: ₹ <span id="invoice-cash-note-total">0.00</span>
+            </div>
+          </section>
+        `;
+        const noteInputs = noteValues.map(value => container.querySelector(`#invoice-cash-note-${value}`));
+        const amountInput = document.querySelectorAll('#modal-fields-container > .form-group')[6].querySelector('input');
+        const updateCashTotal = () => {
+          const countedCash = noteInputs.reduce((total, input, index) => total + (Number(input.value) || 0) * noteValues[index], 0);
+          amountInput.value = countedCash.toFixed(2);
+          amountInput.dispatchEvent(new Event('input'));
+          container.querySelector('#invoice-cash-note-total').textContent = countedCash.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        };
+        noteInputs.forEach(input => input.addEventListener('input', updateCashTotal));
+        updateCashTotal();
+      }
     }
     function openInternalMilkTransferModal() {
       openModal("New Internal Milk Transfer", ["Product", "Source", "Destination", "Scheduled Date"]);
@@ -1646,7 +1862,7 @@
         paidAmountInput.readOnly = true;
         paidAmountInput.required = false;
         container.insertAdjacentHTML('beforeend', `
-          <section aria-label="Cash note count" style="border: 1px solid #E2E8F0; border-radius: 10px; padding: 14px; background: #F8FAFC;">
+          <section class="cash-payment-note-section" aria-label="Cash note count" style="border: 1px solid #E2E8F0; border-radius: 10px; padding: 14px; background: #F8FAFC;">
             <h4 style="margin: 0 0 10px; color: #004B6E; font-size: 13px;">Cash Note Count</h4>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px;">
               ${noteValues.map(value => `
@@ -1685,19 +1901,48 @@
       }
     }
     function openCustomerLedgerPaymentModal() {
-      openModal("Post Customer Payment", ["Customer Name", "Payment Mode", "Amount (₹)", "Cheque / UTR No."]);
+      openModal("Record Customer Payment", ["Customer Name", "Category", "Invoice Amount (₹)", "Received Amount (₹)", "Outstanding Amount (₹)", "Amount to Receive (₹)"]);
+      const modal = document.getElementById('modal-box');
       const container = document.getElementById('modal-fields-container');
-      const paymentModeGroup = container.children[1];
-      paymentModeGroup.querySelector('input').remove();
-      paymentModeGroup.insertAdjacentHTML('beforeend', `
-        <select class="form-control" required>
-          <option value="">Select payment mode</option>
-          <option value="Cash">Cash</option>
-          <option value="Online">Online</option>
-          <option value="UPI">UPI</option>
-          <option value="Cheque">Cheque</option>
+      modal.classList.add('customer-ledger-modal');
+      container.classList.add('customer-ledger-fields');
+      const customerGroup = container.children[0];
+      customerGroup.querySelector('input').remove();
+      customerGroup.insertAdjacentHTML('beforeend', `
+        <select id="customer-ledger-customer" class="form-control" required>
+          <option value="">Select customer</option>
+          ${customerLedgerRecords.map(record => `<option value="${record.customer}">${record.customer}</option>`).join('')}
         </select>
       `);
+      const groups = Array.from(container.children);
+      [1, 2, 3, 4].forEach(index => {
+        const input = groups[index].querySelector('input');
+        input.readOnly = true;
+        input.required = false;
+        groups[index].querySelector('.form-label').textContent = groups[index].querySelector('.form-label').textContent.replace(/ \*$/, '');
+      });
+      const amountInput = groups[5].querySelector('input');
+      amountInput.type = 'number';
+      amountInput.min = '0.01';
+      amountInput.step = 'any';
+      amountInput.required = true;
+      const updateLedgerPaymentFields = () => {
+        const record = customerLedgerRecords.find(item => item.customer === customerGroup.querySelector('select').value);
+        groups[1].querySelector('input').value = record?.category || '';
+        groups[2].querySelector('input').value = record ? record.invoiceAmount.toFixed(2) : '';
+        groups[3].querySelector('input').value = record ? record.receivedAmount.toFixed(2) : '';
+        groups[4].querySelector('input').value = record ? Math.max(0, record.invoiceAmount - record.receivedAmount).toFixed(2) : '';
+        amountInput.max = record ? Math.max(0, record.invoiceAmount - record.receivedAmount).toFixed(2) : '';
+        amountInput.value = '';
+        amountInput.setCustomValidity('');
+      };
+      amountInput.addEventListener('input', () => {
+        const selectedRecord = customerLedgerRecords.find(item => item.customer === customerGroup.querySelector('select').value);
+        const maxAmount = selectedRecord ? selectedRecord.invoiceAmount - selectedRecord.receivedAmount : 0;
+        amountInput.setCustomValidity(Number(amountInput.value) > maxAmount ? 'Payment cannot exceed the outstanding amount.' : '');
+      });
+      customerGroup.querySelector('select').addEventListener('change', updateLedgerPaymentFields);
+      updateLedgerPaymentFields();
     }
     function openCustomerMasterModal() {
       openModal('Add Customer', ['Customer Name', 'Customer Type', 'Contact Person', 'Mobile No.', 'Email', 'GSTIN', 'Address']);
@@ -2025,7 +2270,7 @@
         <section class="generate-invoice-panel" id="generate-invoice-lines-panel" role="tabpanel" aria-labelledby="generate-invoice-lines-tab">
           <div class="generate-invoice-table-wrap">
             <table class="generate-invoice-table">
-              <thead><tr><th>Product</th><th>Quantity</th><th>Unit</th><th>Price</th><th>Amount</th><th aria-label="Actions"></th></tr></thead>
+              <thead><tr><th>Product</th><th>Quantity</th><th>Unit</th><th>Fat Quantity (kg)</th><th>Fat %</th><th>Price</th><th>Amount</th><th aria-label="Actions"></th></tr></thead>
               <tbody id="generate-invoice-line-rows"></tbody>
             </table>
           </div>
@@ -2165,11 +2410,13 @@
       const row = document.createElement('tr');
       row.innerHTML = `
         <td><input class="form-control invoice-line-product" type="text" placeholder="Product" required></td>
-        <td><input class="form-control" type="number" min="0.01" step="any" placeholder="Quantity" required></td>
+        <td><input class="form-control invoice-line-quantity" type="number" min="0.01" step="any" placeholder="Quantity" required></td>
         <td><select class="form-control" required>
           <option value="ml">ml</option><option value="gram">gram</option><option value="kg">kg</option><option value="L">L</option>
         </select></td>
-        <td><input class="form-control" type="number" min="0" step="any" placeholder="Price" required></td>
+        <td><input class="form-control invoice-line-fat-quantity" type="number" min="0" step="any" placeholder="Fat kg"></td>
+        <td><input class="form-control invoice-line-fat-percent" type="number" min="0" max="100" step="any" placeholder="Fat %"></td>
+        <td><input class="form-control invoice-line-price" type="number" min="0" step="any" placeholder="Price" required></td>
         <td><input class="form-control" type="text" placeholder="₹ 0.00" value="₹ 0.00" readonly></td>
         <td><button type="button" class="work-order-delete" aria-label="Delete invoice line" title="Delete invoice line" onclick="removeGenerateInvoiceRow(this, 'line')">×</button></td>
       `;
@@ -2206,7 +2453,8 @@
     function updateGenerateInvoiceTotals() {
       let total = 0;
       document.querySelectorAll('#generate-invoice-line-rows tr').forEach(row => {
-        const [quantityInput, priceInput] = row.querySelectorAll('input[type="number"]');
+        const quantityInput = row.querySelector('.invoice-line-quantity');
+        const priceInput = row.querySelector('.invoice-line-price');
         const amount = (Number(quantityInput.value) || 0) * (Number(priceInput.value) || 0);
         total += amount;
         row.querySelector('input[readonly]').value = `₹ ${amount.toFixed(2)}`;
@@ -2230,20 +2478,23 @@
       });
     }
     function openAddProductModal() {
-      openModal("Add New Product", ["Company", "Product Name", "Product Category", "Cost Price (₹)", "Sales Price (₹)", "UOM", "Shelf Life (Days)"]);
+      openModal("Add New Product", ["Product Name", "Product Category", "Cost Price (₹)", "Sales Price (₹)", "UOM", "Shelf Life (Days)", "Stock Unit", "Current Stock", "Minimum Stock Level"]);
+      const modal = document.getElementById('modal-box');
       const container = document.getElementById('modal-fields-container');
+      container.classList.add('product-master-fields');
+      modal.classList.add('product-master-modal');
       container.querySelectorAll('input').forEach(input => { input.required = true; });
-      [container.children[3], container.children[4]].forEach(group => {
+      [container.children[2], container.children[3]].forEach(group => {
         const priceInput = group.querySelector('input');
         priceInput.type = 'number';
         priceInput.min = '0';
         priceInput.step = '0.01';
       });
-      const shelfLifeInput = container.children[6].querySelector('input');
+      const shelfLifeInput = container.children[5].querySelector('input');
       shelfLifeInput.type = 'number';
       shelfLifeInput.min = '1';
       shelfLifeInput.step = '1';
-      const priceUnitGroup = container.children[5];
+      const priceUnitGroup = container.children[4];
       priceUnitGroup.querySelector('input').remove();
       priceUnitGroup.insertAdjacentHTML('beforeend', `
         <select class="form-control" required>
@@ -2253,6 +2504,26 @@
           <option value="piece">₹ / Piece</option>
         </select>
       `);
+      const stockUnitGroup = container.children[6];
+      stockUnitGroup.querySelector('input').remove();
+      stockUnitGroup.insertAdjacentHTML('beforeend', `
+        <select class="form-control" required aria-label="Stock unit">
+          <option value="">Select stock unit</option>
+          <option value="L">Litre (L)</option>
+          <option value="kg">Kilogram (kg)</option>
+          <option value="pack">Pack</option>
+          <option value="piece">Piece</option>
+        </select>
+      `);
+      const currentStockInput = container.children[7].querySelector('input');
+      const minimumStockInput = container.children[8].querySelector('input');
+      [currentStockInput, minimumStockInput].forEach(input => {
+        input.type = 'number';
+        input.min = '0';
+        input.step = 'any';
+      });
+      currentStockInput.placeholder = 'Enter available quantity';
+      minimumStockInput.placeholder = 'Minimum quantity';
     }
     function openCustomerCategoryModal(categoryCode = '') {
       const category = customerCategoryRecords.find(record => record.code === categoryCode);
@@ -2572,7 +2843,7 @@
         <section class="bill-invoice-panel" id="bill-invoice-panel" role="tabpanel">
           <div class="rfq-product-fields">
             <div class="rfq-product-list"></div>
-            <button type="button" class="btn-secondary rfq-add-product" onclick="addRfqProductRow()">+ Add Product</button>
+            <button type="button" class="btn-secondary rfq-add-product" onclick="addRfqProductRow(true)">+ Add Product</button>
           </div>
           <aside class="rfq-total-panel" aria-live="polite">
             <span class="rfq-total-label">Total Invoice Amount</span>
@@ -2581,7 +2852,7 @@
         </section>
       `);
       modal.classList.add('bill-modal');
-      addRfqProductRow();
+      addRfqProductRow(true);
     }
     function setQcpTab(tab) {
       const showInstructions = tab === 'instructions';
@@ -2615,21 +2886,24 @@
       addRfqProductRow();
     }
     function openProductionWorkOrderModal() {
-      openModal("Initiate Production Work Order", ["Product", "Start Date", "Quantity", "Bill of Material"]);
+      openModal("Initiate Production Work Order", ["Batch Tracking Number", "Product", "Start Date", "Quantity", "Bill of Material"]);
       const modal = document.getElementById('modal-box');
       const container = document.getElementById('modal-fields-container');
       const fields = container.querySelectorAll(':scope > .form-group input');
-      fields[0].placeholder = 'Enter product';
-      fields[0].value = 'Paneer';
+      fields[0].value = `BT-${new Date().toISOString().slice(2, 10).replace(/-/g, '')}-${String(Date.now()).slice(-4)}`;
+      fields[0].readOnly = true;
       fields[0].required = true;
+      fields[1].placeholder = 'Enter product';
+      fields[1].value = 'Paneer';
       fields[1].required = true;
-      fields[2].type = 'number';
-      fields[2].min = '0.01';
-      fields[2].step = 'any';
-      fields[2].placeholder = 'Quantity';
-      fields[2].value = '100';
       fields[2].required = true;
-      const bomGroup = container.children[3];
+      fields[3].type = 'number';
+      fields[3].min = '0.01';
+      fields[3].step = 'any';
+      fields[3].placeholder = 'Quantity';
+      fields[3].value = '100';
+      fields[3].required = true;
+      const bomGroup = container.children[4];
       bomGroup.querySelector('input').remove();
       bomGroup.insertAdjacentHTML('beforeend', `
         <select class="form-control" required>
@@ -2671,7 +2945,7 @@
       addWorkOrderRow('Press and Cut', 'Paneer', '35', '60');
     }
     function openBomModal() {
-      openModal("Create Bill of Materials (BOM)", ["Product", "Quantity", "Company"]);
+      openModal("Create Bill of Materials (BOM)", ["Product", "Quantity"]);
       const modal = document.getElementById('modal-box');
       const container = document.getElementById('modal-fields-container');
       const fields = container.querySelectorAll(':scope > .form-group input');
@@ -2680,7 +2954,6 @@
       fields[1].min = '0.01';
       fields[1].step = 'any';
       fields[1].placeholder = 'Enter quantity';
-      fields[2].placeholder = 'Enter company';
       fields.forEach(field => { field.required = true; });
       container.classList.add('bom-fields');
       container.insertAdjacentHTML('beforeend', `
@@ -2809,11 +3082,11 @@
       modal.classList.add('rfq-modal');
       addRfqProductRow();
     }
-    function addRfqProductRow() {
+    function addRfqProductRow(includeFatFields = false) {
       const list = document.querySelector('.rfq-product-list');
       if (!list) return;
       const row = document.createElement('div');
-      row.className = 'rfq-product-row';
+      row.className = `rfq-product-row${includeFatFields ? ' bill-product-row' : ''}`;
       row.innerHTML = `
         <div class="form-group">
           <label class="form-label">Product *</label>
@@ -2830,9 +3103,19 @@
             <option value="kg">Kilogram (kg)</option>
           </select>
         </div>
+        ${includeFatFields ? `
+          <div class="form-group">
+            <label class="form-label">Fat Quantity (kg)</label>
+            <input type="number" min="0" step="any" placeholder="Fat kg" class="form-control">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Fat %</label>
+            <input type="number" min="0" max="100" step="any" placeholder="Fat %" class="form-control">
+          </div>
+        ` : ''}
         <div class="form-group">
           <label class="form-label">Price *</label>
-          <input type="number" min="0" step="0.01" placeholder="Price (₹)" class="form-control" oninput="updateRfqTotals()" required>
+          <input type="number" min="0" step="0.01" placeholder="Price (₹)" class="form-control rfq-product-price" oninput="updateRfqTotals()" required>
         </div>
         <div class="form-group">
           <label class="form-label">Amount</label>
@@ -2842,6 +3125,7 @@
       `;
       list.appendChild(row);
       row.querySelector('input[type="number"]').addEventListener('input', updateRfqTotals);
+      row.querySelector('.rfq-product-price').addEventListener('input', updateRfqTotals);
       updateRfqProductRemoveButtons();
       updateRfqTotals();
     }
@@ -2850,7 +3134,7 @@
       let total = 0;
       rows.forEach(row => {
         const quantity = Number(row.querySelector('input[type="number"]')?.value) || 0;
-        const price = Number(row.querySelectorAll('input[type="number"]')[1]?.value) || 0;
+        const price = Number(row.querySelector('.rfq-product-price')?.value) || 0;
         const amount = quantity * price;
         total += amount;
         row.querySelector('input[readonly]').value = `₹ ${amount.toFixed(2)}`;
@@ -2891,7 +3175,27 @@
     }
     function submitModal() {
       if (activeModalConfig) {
-        if (activeModalConfig.title.includes('(RFQ)') || activeModalConfig.title === 'Book Customer Order' || activeModalConfig.title === 'Generate Purchase Order' || activeModalConfig.title === 'Generate Invoice' || activeModalConfig.title === 'Create Inward' || activeModalConfig.title === 'Add Customer' || activeModalConfig.title === 'Add Customer Rate' || activeModalConfig.title === 'Initiate Production Work Order' || activeModalConfig.title === 'Create Bill of Materials (BOM)' || activeModalConfig.title === 'Add Quality Control Rule' || activeModalConfig.title === 'Add Bill' || activeModalConfig.title === 'Add New Product' || activeModalConfig.title === 'Log Internal Milk Transfer' || activeModalConfig.title === 'Adjust Storage Tank Level' || activeModalConfig.title === 'Add Expense' || activeModalConfig.title.startsWith('Collect Payment - ') || activeModalConfig.title.endsWith('Customer Category') || ['Add Expense Head', 'Map Expense Head', 'Add Excess Fund Head'].includes(activeModalConfig.title)) {
+        if (activeModalConfig.title.includes('(RFQ)') || activeModalConfig.title === 'Book Customer Order' || activeModalConfig.title === 'Generate Purchase Order' || activeModalConfig.title === 'Generate Invoice' || activeModalConfig.title === 'Create Inward' || activeModalConfig.title === 'Add Customer' || activeModalConfig.title === 'Add Customer Rate' || activeModalConfig.title === 'Initiate Production Work Order' || activeModalConfig.title === 'Create Bill of Materials (BOM)' || activeModalConfig.title === 'Add Quality Control Rule' || activeModalConfig.title === 'Add Bill' || activeModalConfig.title === 'Add New Product' || activeModalConfig.title === 'Log Internal Milk Transfer' || activeModalConfig.title === 'Adjust Storage Tank Level' || activeModalConfig.title === 'Add Expense' || activeModalConfig.title === 'Receive Invoice Payment' || activeModalConfig.title === 'Record Customer Payment' || activeModalConfig.title.startsWith('Collect Payment - ') || activeModalConfig.title.endsWith('Customer Category') || ['Add Expense Head', 'Map Expense Head', 'Add Excess Fund Head'].includes(activeModalConfig.title)) {
+          if (activeModalConfig.title === 'Add New Product') {
+            const groups = document.querySelectorAll('#modal-fields-container > .form-group');
+            const values = Array.from(groups, group => group.querySelector('input, select').value.trim());
+            const [name, category, costPrice, salesPrice, priceUom, shelfLife, stockUnit, currentStock, minimumStock] = values;
+            productMasterRecords.unshift({
+              name,
+              category,
+              costPrice: Number(costPrice),
+              salesPrice: `₹ ${Number(salesPrice).toFixed(2)}`,
+              priceUom: `₹/${priceUom}`,
+              shelfLife: `${shelfLife} Days`,
+              stockUnit,
+              currentStock: Number(currentStock),
+              minimumStock: Number(minimumStock)
+            });
+            closeModal();
+            showToast('Product and stock thresholds added successfully.');
+            renderWorkspace();
+            return;
+          }
           if (activeModalConfig.title === 'Book Customer Order') {
             const quantityInputs = [4, 5, 6].map(index => document.querySelectorAll('#modal-fields-container > .form-group')[index].querySelector('input'));
             if (quantityInputs.every(input => Number(input.value) === 0)) {
@@ -2928,6 +3232,62 @@
               return;
             }
           }
+          if (activeModalConfig.title === 'Receive Invoice Payment') {
+            const modeFields = document.querySelectorAll('#invoice-payment-mode-fields input[required], #invoice-payment-mode-fields select[required]');
+            for (const field of modeFields) {
+              if (!field.checkValidity()) {
+                field.reportValidity();
+                return;
+              }
+            }
+          }
+        }
+        if (activeModalConfig.title === 'Receive Invoice Payment') {
+          const invoice = customerInvoiceRecords.find(record => record.invoiceNo === activeInvoicePaymentId);
+          if (!invoice) {
+            showToast('Invoice not found. Please reopen the payment form.');
+            closeModal();
+            return;
+          }
+          const groups = document.querySelectorAll('#modal-fields-container > .form-group');
+          const amount = Number(groups[6].querySelector('input').value);
+          const outstanding = invoice.total - invoice.paid;
+          if (amount <= 0 || amount > outstanding) {
+            groups[6].querySelector('input').setCustomValidity('Enter an amount greater than zero and no more than the outstanding amount.');
+            groups[6].querySelector('input').reportValidity();
+            return;
+          }
+          const mode = document.getElementById('invoice-payment-mode').value;
+          const reference = document.getElementById('invoice-payment-reference')?.value || '';
+          const transactionId = document.getElementById('invoice-payment-transaction-id')?.value.trim() || '';
+          invoice.paid = Math.min(invoice.total, invoice.paid + amount);
+          invoice.payments.push({ amount, mode, reference, transactionId });
+          closeModal();
+          showToast('Invoice payment received successfully.');
+          renderWorkspace();
+          return;
+        }
+        if (activeModalConfig.title === 'Record Customer Payment') {
+          const groups = document.querySelectorAll('#modal-fields-container > .form-group');
+          const customer = groups[0].querySelector('select').value;
+          const record = customerLedgerRecords.find(item => item.customer === customer);
+          const amountInput = groups[5].querySelector('input');
+          const amount = Number(amountInput.value);
+          const outstanding = record ? record.invoiceAmount - record.receivedAmount : 0;
+          if (!record) {
+            showToast('Select a valid customer before recording payment.');
+            return;
+          }
+          if (amount <= 0 || amount > outstanding) {
+            amountInput.setCustomValidity('Enter an amount greater than zero and no more than the outstanding amount.');
+            amountInput.reportValidity();
+            return;
+          }
+          record.receivedAmount = Math.min(record.invoiceAmount, record.receivedAmount + amount);
+          closeModal();
+          showToast('Customer payment recorded successfully.');
+          renderWorkspace();
+          return;
         }
         if (activeModalConfig.title === 'Book Customer Order') {
           const groups = document.querySelectorAll('#modal-fields-container > .form-group');
@@ -3260,6 +3620,15 @@
           ]);
           return;
         }
+        if (currentSubMenu === 'Billing') {
+          renderTableScreen(viewport, "Vendor Bills", "Vendor invoices, due dates, and payment status", "Add Bill", openBillModal, [
+            { label: "Bill No." }, { label: "Vendor Name" }, { label: "Bill Date" }, { label: "Due Date" }, { label: "Status", align: "center" }
+          ], [
+            ["BILL-2026-0018", "Sangam Milk Producer Co-op", "02 Nov 2026", "17 Nov 2026", '<span class="badge badge-amber">PENDING</span>'],
+            ["BILL-2026-0017", "PolyPack Films Ltd", "30 Oct 2026", "29 Nov 2026", '<span class="badge badge-green">PAID</span>']
+          ]);
+          return;
+        }
       }
 
       // 3. SALES
@@ -3291,22 +3660,27 @@
           return;
         }
         if (currentSubMenu === 'Customer Invoices') {
+          const formatInvoiceAmount = amount => `₹ ${amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+          const invoiceRows = customerInvoiceRecords.map(invoice => {
+            const outstanding = Math.max(0, invoice.total - invoice.paid);
+            const isPaid = outstanding === 0;
+            return [
+              invoice.invoiceNo,
+              invoice.customer,
+              invoice.route,
+              invoice.gstin,
+              formatInvoiceAmount(invoice.total),
+              formatInvoiceAmount(invoice.paid),
+              formatInvoiceAmount(outstanding),
+              isPaid
+                ? '<span class="badge badge-green">Received</span>'
+                : `<button class="btn-primary" onclick="openInvoicePaymentModal('${invoice.invoiceNo}')">Receive Payment</button>`
+            ];
+          });
           renderTableScreen(viewport, "Customer Invoices", "Daily sales invoicing with direct Tally XML batch synchronization", "Generate Invoice", openGenerateInvoiceModal, [
-            { label: "Invoice No." }, { label: "Customer" }, { label: "Route" }, { label: "GSTIN" }, { label: "Invoice Total (₹)", align: "right" }
-          ], [
-            ["INV-2026-1101", "Mahalaxmi Super Market", "Route North-1", "27AABCU9603R1ZM", "₹ 18,400"],
-            ["INV-2026-1102", "Hotel Sai Palace", "Route Central-2", "27AAACH8821N1ZS", "₹ 27,600"],
-            ["INV-2026-1103", "Shri Krishna Dairy Parlour", "Route South-3", "27AAAGS7712M1Z0", "₹ 11,500"]
-          ]);
-          return;
-        }
-        if (currentSubMenu === 'Billing') {
-          renderTableScreen(viewport, "Vendor Bills", "Vendor invoices, due dates, and payment status", "Add Bill", openBillModal, [
-            { label: "Bill No." }, { label: "Vendor Name" }, { label: "Bill Date" }, { label: "Due Date" }, { label: "Status", align: "center" }
-          ], [
-            ["BILL-2026-0018", "Sangam Milk Producer Co-op", "02 Nov 2026", "17 Nov 2026", '<span class="badge badge-amber">PENDING</span>'],
-            ["BILL-2026-0017", "PolyPack Films Ltd", "30 Oct 2026", "29 Nov 2026", '<span class="badge badge-green">PAID</span>']
-          ]);
+            { label: "Invoice No." }, { label: "Customer" }, { label: "Route" }, { label: "GSTIN" }, { label: "Invoice Total (₹)", align: "right" },
+            { label: "Paid Amount (₹)", align: "right" }, { label: "Outstanding (₹)", align: "right" }, { label: "Payment Status", align: "center" }
+          ], invoiceRows);
           return;
         }
         // Delivery Challans
@@ -3324,11 +3698,11 @@
       if (currentModule === 'Manufacturing' && currentSubMenu !== 'Manufacturing Report') {
         if (currentSubMenu === 'Production Orders') {
           renderTableScreen(viewport, "Production Work Orders", "Execution status for Pasteurisation, Cream Separation & Ghee Boilers", "New Work Order", openProductionWorkOrderModal, [
-            { label: "Order ID" }, { label: "Finished Product" }, { label: "Quantity" }, { label: "Start Date", align: "right" }, { label: "Status", align: "center" }
+            { label: "Order ID" }, { label: "Batch Tracking Number" }, { label: "Finished Product" }, { label: "Quantity" }, { label: "Start Date", align: "right" }, { label: "Status", align: "center" }
           ], [
-            ["MO-2026-012", "Paneer", "100 Kg", "12-10-2026", '<span class="badge badge-blue">In Progress</span>'],
-            ["MO-2026-013", "Pure Cow Ghee 1L Jar", "450 L", "15-10-2026", '<span class="badge badge-green">Packaging</span>'],
-            ["MO-2026-014", "Butter Milk 500ml Pouch", "8,500 L", "18-10-2026", '<span class="badge badge-green">Completed</span>']
+            ["MO-2026-012", "BT-261012-0012", "Paneer", "100 Kg", "12-10-2026", '<span class="badge badge-blue">In Progress</span>'],
+            ["MO-2026-013", "BT-261015-0013", "Pure Cow Ghee 1L Jar", "450 L", "15-10-2026", '<span class="badge badge-green">Packaging</span>'],
+            ["MO-2026-014", "BT-261018-0014", "Butter Milk 500ml Pouch", "8,500 L", "18-10-2026", '<span class="badge badge-green">Completed</span>']
           ]);
           return;
         }
@@ -3380,10 +3754,10 @@
         }
         // Batch Tracking
         renderTableScreen(viewport, "End-to-End Batch Tracking & Traceability", "Bidirectional tracing: Inward Tanker →  → Processing → Retail Pack → Customer Route", "Search Batch", () => openModal("Search Record", ["Batch / Lot ID", "Direction (Forward / Backward)"]), [
-          { label: "Parent Inward Batch" }, { label: "Production" }, { label: "Work Order" }, { label: "Final Batch", align: "right" }, { label: "Dispatch Route", align: "right" }
+          { label: "Parent Inward Batch" }, { label: "Production" }, { label: "Work Order" }, { label: "Dispatch Route", align: "right" }
         ], [
-          ["RM-P1-261028-03A", " S-01", "MO-2026-012", "TM-261028-A", "Route North-1 (Mahalaxmi Super Market)"],
-          ["RM-P1-261027-02B", " S-02", "MO-2026-013", "GH-261027-01", "Route South-3 (Hotel Sai Palace)"]
+          ["RM-P1-261028-03A", " S-01", "MO-2026-012", "Route North-1 (Mahalaxmi Super Market)"],
+          ["RM-P1-261027-02B", " S-02", "MO-2026-013", "Route South-3 (Hotel Sai Palace)"]
         ]);
         return;
       }
@@ -3472,14 +3846,14 @@
       if (currentModule === 'Stock' && currentSubMenu !== 'Stock Report') {
         if (currentSubMenu === 'Storage Stock' || currentSubMenu === ' Storage Stock') {
           const tankStock = [
-            { tank: "Tank BMT-01", milk: "Raw Whole Buffalo Milk", capacity: 25000, volume: 18400, fatPercent: 6.2, temperature: "4.2 °C", status: '<span class="badge badge-green">SANITIZED</span>' },
-            { tank: "Tank BMT-02", milk: "Pasteurised Toned Milk", capacity: 20000, volume: 12600, fatPercent: 3.0, temperature: "3.8 °C", status: '<span class="badge badge-green">SANITIZED</span>' },
-            { tank: "Tank BMT-03", milk: "Standard Milk Culture", capacity: 15000, volume: 4800, fatPercent: 3.5, temperature: "4.0 °C", status: '<span class="badge badge-amber">RETEST DUE</span>' }
+            { tank: "Tank BMT-01", milk: "Raw Whole Buffalo Milk", capacity: 25000, volume: 18400, fatPercent: 6.2, temperature: "4.2 °C"},
+            { tank: "Tank BMT-02", milk: "Pasteurised Toned Milk", capacity: 20000, volume: 12600, fatPercent: 3.0, temperature: "3.8 °C"},
+            { tank: "Tank BMT-03", milk: "Standard Milk Culture", capacity: 15000, volume: 4800, fatPercent: 3.5, temperature: "4.0 °C"}
           ];
           const formatStockQuantity = value => value.toLocaleString('en-IN', { maximumFractionDigits: 2 });
           const totalFatQuantity = tankStock.reduce((total, tank) => total + tank.volume * tank.fatPercent / 100, 0);
           renderTableScreen(viewport, "Bulk Storage Tank Stock & Holding Levels", "Storage tank holding capacity, volume, temperature, and calculated fat quantity (volume × FAT %)", "Record Stock", openStorageTankStockModal, [
-            { label: "Tank ID" }, { label: "Milk Type" }, { label: "Capacity (L)", align: "right" }, { label: "Current Volume (L)", align: "right" }, { label: "FAT %", align: "right" }, { label: "Fat Quantity (kg)", align: "right" }, { label: "Temp (°C)", align: "right" }, { label: "CIP Status", align: "center" }
+            { label: "Tank ID" }, { label: "Milk Type" }, { label: "Capacity (L)", align: "right" }, { label: "Current Volume (L)", align: "right" }, { label: "FAT %", align: "right" }, { label: "Fat Quantity (kg)", align: "right" }, { label: "Temp (°C)", align: "right" }
           ], tankStock.map(tank => [
             tank.tank,
             tank.milk,
@@ -3488,7 +3862,7 @@
             `${tank.fatPercent.toFixed(2)}%`,
             `${formatStockQuantity(tank.volume * tank.fatPercent / 100)} kg`,
             tank.temperature,
-            tank.status
+            
           ]));
           const totalRow = document.createElement('div');
           totalRow.style.cssText = "display:flex;justify-content:flex-end;align-items:center;gap:8px;padding:14px 16px;background:#F0F9FF;border:1px solid #BAE6FD;border-radius:10px;color:#004B6E;font-size:13px;font-weight:700;";
@@ -3496,17 +3870,8 @@
           viewport.querySelector('.card').appendChild(totalRow);
           return;
         }
-        if (currentSubMenu === 'Warehouse Operations') {
-          renderTableScreen(viewport, "Warehouse & Cold Room Operations", "Finished goods staging, rack positions, and batch expiries", "Transfer to Cold Room", openStageFinishedGoodsModal, [
-            { label: "Cold Room" }, { label: "Product" }, { label: "Batch ID" }, { label: "Quantity", align: "right" }, { label: "Temp (°C)", align: "right" }, { label: "Status", align: "center" }
-          ], [
-            ["Cold Room CR-01", "Standardised Toned Milk 1L", "TM-261028-A", "120 Boxes", "3.5 °C", '<span class="badge badge-green">READY FOR ROUTE</span>'],
-            ["Cold Room CR-02", "Pure Cow Ghee 1L Jar", "GH-261027-01", "420 Master Boxes", "4.0 °C", '<span class="badge badge-green">READY FOR DISPATCH</span>']
-          ]);
-          return;
-        }
-        if (currentSubMenu === 'Internal Transfers') {
-          renderTableScreen(viewport, "Internal Transfers", "Inter-tank, inter-facility, and process transfer logs", "New Transfer", openInternalMilkTransferModal, [
+       if (currentSubMenu === 'Warehouse Internal Transfer') {
+          renderTableScreen(viewport, "Warehouse Internal Transfer", "Inter-tank, inter-facility, and process transfer logs", "New Transfer", openInternalMilkTransferModal, [
             { label: "Transfer #" }, { label: "Source" }, { label: "Destination" }, { label: "Volume (L)", align: "right" }, { label: "Timestamp", align: "right" }, { label: "Status", align: "center" }
           ], [
             ["TR-2026-441", "Tank BMT-01 (Raw Whole)", "Pasteuriser Feed Tank 1", "12,000 L", "28 Oct 06:30", '<span class="badge badge-green">COMPLETED</span>'],
@@ -3632,13 +3997,16 @@
           return;
         }
         // Customer Ledgers
-        renderTableScreen(viewport, "Customer Ledgers & Credit Control", "Outstanding balance, credit days, and credit stop rules", "Record Payment", openCustomerLedgerPaymentModal, [
-          { label: "Customer Name" }, { label: "Category" }, { label: "Outstanding (₹)", align: "right" }, { label: "Credit Limit (₹)", align: "right" }, { label: "Payment Mode", align: "center" }, { label: "Credit Status", align: "center" }
-        ], [
-          ["Mahalaxmi Super Market", "Wholesale Dealer", "₹ 24,500", "₹ 50,000", "UPI", '<span class="badge badge-green">ACTIVE</span>'],
-          ["Hotel Sai Palace", "Institutional", "₹ 12,000", "₹ 30,000", "Cheque", '<span class="badge badge-green">ACTIVE</span>'],
-          ["Shri Krishna Dairy Parlour", "Retail Outlet", "₹ 48,200", "₹ 40,000", "Cash", '<span class="badge badge-red">CREDIT HOLD</span>']
-        ]);
+        const formatLedgerAmount = amount => `₹ ${amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        renderTableScreen(viewport, "Customer Ledgers & Credit Control", "Invoice totals, received payments, and outstanding balances by customer", "Record Payment", openCustomerLedgerPaymentModal, [
+          { label: "Customer Name" }, { label: "Category" }, { label: "Invoice Amount (₹)", align: "right" }, { label: "Received Amount (₹)", align: "right" }, { label: "Outstanding (₹)", align: "right" }
+        ], customerLedgerRecords.map(record => [
+          record.customer,
+          record.category,
+          formatLedgerAmount(record.invoiceAmount),
+          formatLedgerAmount(record.receivedAmount),
+          formatLedgerAmount(Math.max(0, record.invoiceAmount - record.receivedAmount))
+        ]));
         return;
       }
 
@@ -3675,16 +4043,16 @@
           },
           'Manufacturing Report': {
             title: "Production Output & Yield Report",
-            desc: "Track planned versus actual production, variance, and batch completion.",
-            headers: [{ label: "Production Order" }, { label: "Product" }, { label: "Planned Output" }, { label: "Actual Output" }, { label: "Variance" }, { label: "Achievement (%)", align: "right" }, { label: "Batch Status", align: "center" }],
+            desc: "Track planned versus actual production, achievement, and batch completion.",
+            headers: [{ label: "Production Order" }, { label: "Product" }, { label: "Planned Output" }, { label: "Actual Output" }, { label: "Achievement (%)", align: "right" }, { label: "Batch Status", align: "center" }],
             charts: {
               line: { title: "Production Achievement by Order (%)", categories: ["MO-1081", "MO-1082", "MO-1083"], series: [{ name: "Achievement (%)", values: [99.75, 98, 103], color: "#004B6E" }] },
               pie: { title: "Production Order Status", slices: [{ label: "Completed", value: 2 }, { label: "Review", value: 1 }] }
             },
             rows: [
-              ["MO-2026-1081", "Standardised Toned Milk (L)", "12,000 L", "11,970 L", "-30 L", "99.75", '<span class="badge badge-green">COMPLETED</span>'],
-              ["MO-2026-1082", "Butter Milk 500 ml (Pouches)", "4,000", "3,920", "-80", "98.00", '<span class="badge badge-amber">REVIEW</span>'],
-              ["MO-2026-1083", "Fresh Paneer (kg)", "400 kg", "412 kg", "+12 kg", "103.00", '<span class="badge badge-green">COMPLETED</span>']
+              ["MO-2026-1081", "Standardised Toned Milk (L)", "12,000 L", "11,970 L", "99.75", '<span class="badge badge-green">COMPLETED</span>'],
+              ["MO-2026-1082", "Butter Milk 500 ml (Pouches)", "4,000", "3,920", "98.00", '<span class="badge badge-amber">REVIEW</span>'],
+              ["MO-2026-1083", "Fresh Paneer (kg)", "400 kg", "412 kg", "103.00", '<span class="badge badge-green">COMPLETED</span>']
             ]
           },
           'Stock Report': {
@@ -3718,15 +4086,15 @@
           'Accounting Report': {
             title: "Collections by Route & Payment Mode",
             desc: "Compare cash, UPI, cheque, and online collections against expected route collections.",
-            headers: [{ label: "Route" }, { label: "Expected (₹)", align: "right" }, { label: "Cash (₹)", align: "right" }, { label: "UPI (₹)", align: "right" }, { label: "Cheque (₹)", align: "right" }, { label: "Online (₹)", align: "right" }, { label: "Collected Total (₹)", align: "right" }, { label: "Variance (₹)", align: "right" }, { label: "Reconciliation", align: "center" }],
+            headers: [{ label: "Route" }, { label: "Expected (₹)", align: "right" }, { label: "Cash (₹)", align: "right" }, { label: "UPI (₹)", align: "right" }, { label: "Cheque (₹)", align: "right" }, { label: "Online (₹)", align: "right" }, { label: "Collected Total (₹)", align: "right" }, { label: "Outstanding amount (₹)", align: "right" }],
             charts: {
               line: { title: "Expected vs Collected by Route (₹)", categories: ["North-1", "Central-2", "South-3"], series: [{ name: "Expected", values: [209000, 266000, 185000], color: "#004B6E" }, { name: "Collected", values: [209000, 265000, 185000], color: "#2E9E40" }] },
               pie: { title: "Collections by Payment Mode", slices: [{ label: "Cash", value: 134000 }, { label: "UPI", value: 253000 }, { label: "Cheque", value: 187000 }, { label: "Online", value: 85000 }] }
             },
             rows: [
-              ["Route North-1", "₹ 2,09,000", "₹ 42,000", "₹ 85,000", "₹ 57,000", "₹ 25,000", "₹ 2,09,000", "₹ 0", '<span class="badge badge-green">BALANCED</span>'],
-              ["Route Central-2", "₹ 2,66,000", "₹ 54,000", "₹ 92,000", "₹ 84,000", "₹ 35,000", "₹ 2,65,000", "-₹ 1,000", '<span class="badge badge-amber">SHORT BY ₹ 1,000</span>'],
-              ["Route South-3", "₹ 1,85,000", "₹ 38,000", "₹ 76,000", "₹ 46,000", "₹ 25,000", "₹ 1,85,000", "₹ 0", '<span class="badge badge-green">BALANCED</span>']
+              ["Route North-1", "₹ 2,09,000", "₹ 42,000", "₹ 85,000", "₹ 57,000", "₹ 25,000", "₹ 2,09,000", "₹ 0",],
+              ["Route Central-2", "₹ 2,66,000", "₹ 54,000", "₹ 92,000", "₹ 84,000", "₹ 35,000", "₹ 2,65,000", "-₹ 1,000",],
+              ["Route South-3", "₹ 1,85,000", "₹ 38,000", "₹ 76,000", "₹ 46,000", "₹ 25,000", "₹ 1,85,000", "₹ 0",]
             ]
           }
         };
@@ -3807,14 +4175,18 @@
           return;
         }
         if (currentSubMenu === 'Product') {
-          renderTableScreen(viewport, "Product Master", "Product categories, shelf life, and selling price with its unit basis", "Add Product", openAddProductModal, [
-            { label: "Company" }, { label: "Product Name" }, { label: "Category" }, { label: "Sales Price (₹)", align: "right" }, { label: "UOM", align: "center" }, { label: "Shelf Life", align: "right" }
-          ], [
-            ["SGJMP", "Standardised Toned Milk", "Liquid Milk", "₹ 58.00", "₹/L", "2 Days (Chilled)"],
-            ["SGJMP", "Butter Milk 500 ml", "Fermented Drinks", "₹ 25.00", "₹/pack", "5 Days (Chilled)"],
-            ["SGJMP", "Pure Cow Ghee 1L", "Fat Products", "₹ 620.00", "₹/kg", "180 Days (Ambient)"],
-            ["SGJMP", "Fresh Paneer", "Fresh Dairy", "₹ 360.00", "₹/kg", "7 Days (Chilled)"]
-          ]);
+          renderTableScreen(viewport, "Product Master", "Product pricing, shelf life, and stock status.", "Add Product", openAddProductModal, [
+            { label: "Product Name" }, { label: "Category" }, { label: "Sales Price (₹)", align: "right" }, { label: "UOM", align: "center" }, { label: "Shelf Life" }, { label: "Stock Status", align: "center" }
+          ], productMasterRecords.map(product => [
+            product.name,
+            product.category,
+            product.salesPrice,
+            product.priceUom,
+            product.shelfLife,
+            Number(product.currentStock) <= Number(product.minimumStock)
+              ? '<span class="badge badge-amber">LOW STOCK</span>'
+              : '<span class="badge badge-green">SUFFICIENT</span>'
+          ]));
           return;
         }
         if (currentSubMenu === 'Units of Measure') {
@@ -4337,12 +4709,12 @@
           ];
         }
         case 'Manufacturing Report': {
-          const achievement = rows.reduce((total, row) => total + number(row[5]), 0);
+          const achievement = rows.reduce((total, row) => total + number(row[4]), 0);
           return [
             { label: 'Production Orders', value: format(rows.length) },
             { label: 'Average Achievement', value: `${rows.length ? (achievement / rows.length).toFixed(2) : '0.00'}%` },
-            { label: 'Completed Orders', value: format(countStatuses(6, 'completed')) },
-            { label: 'Orders for Review', value: format(countStatuses(6, 'review')) }
+            { label: 'Completed Orders', value: format(countStatuses(5, 'completed')) },
+            { label: 'Orders for Review', value: format(countStatuses(5, 'review')) }
           ];
         }
         case 'Stock Report': {
@@ -4368,9 +4740,7 @@
           return [
             { label: 'Expected Collection', value: money(expected) },
             { label: 'Total Collected', value: money(collected) },
-            { label: 'Collection Variance', value: money(variance) },
-            { label: 'Reconciled Routes', value: `${format(countStatuses(8, 'balanced'))} / ${format(rows.length)}` },
-            { label: 'Collection Rate', value: `${expected ? (collected / expected * 100).toFixed(1) : '0.0'}%` }
+            { label: 'Outstanding amount', value: money(variance) },
           ];
         }
         default:
