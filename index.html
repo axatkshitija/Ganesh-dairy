@@ -1277,7 +1277,7 @@
     const systemModules = [
       { id: 'Home', label: 'Home', subMenus: ['Overview'] },
       { id: 'Purchase', label: 'Purchase', subMenus: ['Raw Milk Intake', 'Purchase Orders', 'Billing', 'Purchase Report'] },
-      { id: 'Quality', label: 'Quality', subMenus: ['Quality Control Points', 'Milk Inward Lab Check', 'Inspection Reports'] },
+      { id: 'Quality', label: 'Quality', subMenus: ['Quality Control Points', 'Milk Inward Lab Check', 'Cream Separation Lab', 'Ghee Lab', 'Curd Lab', 'Inspection Reports'] },
       { id: 'Stock', label: 'Stock', subMenus: ['Storage Stock','Warehouse Internal Transfer', 'Stock Report'] },
       { id: 'Manufacturing', label: 'Manufacturing', subMenus: ['Production Orders', 'Bill of Materials (BOM)', 'Batch Tracking', 'Manufacturing Report'] },
       { id: 'Sales', label: 'Sales', subMenus: ['Sales Orders', 'Customer Invoices', 'Delivery Challans', 'Sales Report'] },
@@ -3765,6 +3765,8 @@
 
       // 5. QUALITY
       if (currentModule === 'Quality') {
+        if (labMap[currentSubMenu]) { labStage = labMap[currentSubMenu]; renderLabScreen(viewport); return; }
+if (currentSubMenu === 'Inspection Reports') { renderLabRecords(viewport); return; }
         if (currentSubMenu === 'Quality Control Points') {
           renderTableScreen(viewport, "Quality Control Points (QCP) Thresholds", "Standard compliance limits for FAT, SNF, Acidity, and Temperature", "Add QCP Rule", openQualityControlRuleModal, [
             { label: "Stage" },{ label: "Product" },  { label: "Parameter" }, { label: "Min Limit", align: "right" }, { label: "Max Limit", align: "right" }, { label: "Status", align: "center" }
@@ -5003,5 +5005,6 @@
       renderApp();
     };
   </script>
+  <script src="quality-lab-patch.js"></script>
 </body>
 </html>
