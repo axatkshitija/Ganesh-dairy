@@ -1287,7 +1287,7 @@
     ];
 
     const mastersHierarchy = [
-      { id: 'Centre', type: 'single', label: 'Storage units' },
+      { id: 'Centre ', type: 'single', label: 'Centre ' },
       { id: 'Users', type: 'group', label: 'Users', children: ['Employees', 'Assign Role'] },
       { id: 'Product', type: 'group', label: 'Product', children: ['Product', 'Units of Measure', 'Packing Type', 'SKU', 'Raw Material', 'Cash Discount'] },
       { id: 'Customer', type: 'group', label: 'Customer', children: ['Customer Type', 'Customers',] },
@@ -1346,11 +1346,11 @@
     let expenseMappingRecords = [
       { facility: 'Central Processing Facility', department: 'Vehicle Operations', expenseHead: 'Vehicle Fuel & Toll', monthlyBudget: 150000, effectiveDate: '2026-11-01' },
       { facility: 'Central Processing Facility', department: 'Production', expenseHead: 'Plant Electricity', monthlyBudget: 250000, effectiveDate: '2026-11-01' },
-      { facility: 'North Chilling Centre', department: 'Maintenance', expenseHead: 'Equipment Maintenance', monthlyBudget: 35000, effectiveDate: '2026-11-01' }
+      { facility: 'North Chilling Centre ', department: 'Maintenance', expenseHead: 'Equipment Maintenance', monthlyBudget: 35000, effectiveDate: '2026-11-01' }
     ];
     const expenseSearchRecords = [
       { voucher: 'EXP-2026-1104', date: '2026-11-04', company: 'Shri Ganesh Milk Products', centre: 'Central Processing Facility', head: 'Vehicle Fuel & Toll', description: 'Route North-1 diesel and toll', amount: 18450, paymentMode: 'Bank Transfer', concernedPerson: 'S. Pawar' },
-      { voucher: 'EXP-2026-1103', date: '2026-11-04', company: 'Shri Ganesh Milk Products', centre: 'North Chilling Centre', head: 'Plant Electricity', description: 'Monthly electricity charges', amount: 32750, paymentMode: 'Online', concernedPerson: 'A. Patil' },
+      { voucher: 'EXP-2026-1103', date: '2026-11-04', company: 'Shri Ganesh Milk Products', centre: 'North Chilling Centre ', head: 'Plant Electricity', description: 'Monthly electricity charges', amount: 32750, paymentMode: 'Online', concernedPerson: 'A. Patil' },
       { voucher: 'EXP-2026-1102', date: '2026-11-03', company: 'Gajanan Milk Products', centre: 'Central Processing Facility', head: 'Equipment Maintenance', description: 'Pasteurizer preventive maintenance', amount: 12600, paymentMode: 'Cheque', concernedPerson: 'R. Jadhav' },
       { voucher: 'EXP-2026-1101', date: '2026-11-01', company: 'Shri Ganesh Milk Products', centre: 'Central Processing Facility', head: 'Plant Electricity', description: 'Cold room power charges', amount: 28900, paymentMode: 'Online', concernedPerson: 'K. More' }
     ];
@@ -2720,7 +2720,7 @@
       openModal('Map Expense Head', ['Facility', 'Department', 'Expense Head', 'Monthly Budget (₹)', 'Effective Date']);
       const container = document.getElementById('modal-fields-container');
       container.querySelectorAll('input').forEach(input => { input.required = true; });
-      replaceFormInputWithSelect(container, 0, ['Central Processing Facility', 'North Chilling Centre'], 'Select facility');
+      replaceFormInputWithSelect(container, 0, ['Central Processing Facility', 'North Chilling Centre '], 'Select facility');
       replaceFormInputWithSelect(container, 1, ['Production', 'Quality Control', 'Vehicle Operations', 'Maintenance', 'Administration', 'Cold Storage'], 'Select department');
       replaceFormInputWithSelect(container, 2, expenseHeadRecords.filter(record => record.active).map(record => record.name), 'Select expense head');
       const budgetInput = container.children[3].querySelector('input');
@@ -4021,13 +4021,13 @@ if (currentSubMenu === 'Inspection Reports') { renderLabRecords(viewport); retur
             desc: "Review supplier deliveries, milk quality, agreed rate, and purchase value.",
             headers: [{ label: "Supplier" }, { label: "Received Date" }, { label: "Received Volume (L)", align: "right" }, { label: "Avg FAT (%)", align: "right" }, { label: "Fat Quantity (kg)", align: "right" }, { label: "Avg SNF (%)", align: "right" }, { label: "Rate (₹/L)", align: "right" }, { label: "Purchase Value (₹)", align: "right" }, { label: "Quality Status", align: "center" }],
             charts: {
-              line: { title: "Inward Volume by Supplier (L)", categories: ["Sangam Co-op", "Kolhapur Union", "North Centre"], series: [{ name: "Volume (L)", values: [15000, 9500, 8200], color: "#004B6E" }] },
-              pie: { title: "Share of Total Milk Inward", slices: [{ label: "Sangam Co-op", value: 15000 }, { label: "Kolhapur Union", value: 9500 }, { label: "North Centre", value: 8200 }] }
+              line: { title: "Inward Volume by Supplier (L)", categories: ["Sangam Co-op", "Kolhapur Union", "North Centre "], series: [{ name: "Volume (L)", values: [15000, 9500, 8200], color: "#004B6E" }] },
+              pie: { title: "Share of Total Milk Inward", slices: [{ label: "Sangam Co-op", value: 15000 }, { label: "Kolhapur Union", value: 9500 }, { label: "North Centre ", value: 8200 }] }
             },
             rows: [
               ["Sangam Milk Producer Co-op", "04 Nov 2026", "15,000", "6.20", "930.00", "8.85", "48.50", "₹ 7,27,500", '<span class="badge badge-green">ACCEPTED</span>'],
               ["Kolhapur Dairy Union", "04 Nov 2026", "9,500", "6.25", "593.75", "8.88", "47.50", "₹ 4,51,250", '<span class="badge badge-green">ACCEPTED</span>'],
-              ["North Chilling Centre", "03 Nov 2026", "8,200", "6.10", "500.20", "8.72", "46.00", "₹ 3,77,200", '<span class="badge badge-amber">REVIEW</span>']
+              ["North Chilling Centre ", "03 Nov 2026", "8,200", "6.10", "500.20", "8.72", "46.00", "₹ 3,77,200", '<span class="badge badge-amber">REVIEW</span>']
             ]
           },
           'Sales Report': {
@@ -4171,12 +4171,12 @@ if (currentSubMenu === 'Inspection Reports') { renderLabRecords(viewport); retur
 
       // 10. MASTERS
       if (currentModule === 'Masters') {
-        if (currentSubMenu === 'Centre') {
-          renderTableScreen(viewport, "Storage units Master", "Processing plants, chilling centres, and bulk milk coolers", "Add Centre", () => openModal("Add New Centre", ["Centre Type", "Centre Code", "Centre Name", "Contact No.", "Email ID"]), [
-            { label: "Centre Code" }, { label: "Centre Name" }, { label: "Centre Type" }, { label: "Contact No.", align: "right" }, { label: "Email ID", align: "right" }
+        if (currentSubMenu === 'Centre ') {
+          renderTableScreen(viewport, "Centre  Master", "Processing plants, chilling centres, and bulk milk coolers", "Add Centre ", () => openModal("Add New Centre ", ["Centre  Type", "Centre  Code", "Centre  Name", "Contact No.", "Email ID"]), [
+            { label: "Centre  Code" }, { label: "Centre  Name" }, { label: "Centre  Type" }, { label: "Contact No.", align: "right" }, { label: "Email ID", align: "right" }
           ], [
             ["PL01", "Central Processing Facility", "Plant", "+91 98000 00000", "plant.demo@example-dairy.com"],
-            ["CC02", "North Chilling Centre", "Chilling Centre", "+91 98000 00001", "north.cc@example-dairy.com"]
+            ["CC02", "North Chilling Centre ", "Chilling Centre ", "+91 98000 00001", "north.cc@example-dairy.com"]
           ]);
           return;
         }
