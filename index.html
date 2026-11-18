@@ -1287,7 +1287,7 @@
     ];
 
     const mastersHierarchy = [
-      { id: 'Centre', type: 'single', label: 'Centre' },
+      { id: 'Centre', type: 'single', label: 'Storage units' },
       { id: 'Users', type: 'group', label: 'Users', children: ['Employees', 'Assign Role'] },
       { id: 'Product', type: 'group', label: 'Product', children: ['Product', 'Units of Measure', 'Packing Type', 'SKU', 'Raw Material', 'Cash Discount'] },
       { id: 'Customer', type: 'group', label: 'Customer', children: ['Customer Type', 'Customers',] },
@@ -4172,7 +4172,7 @@ if (currentSubMenu === 'Inspection Reports') { renderLabRecords(viewport); retur
       // 10. MASTERS
       if (currentModule === 'Masters') {
         if (currentSubMenu === 'Centre') {
-          renderTableScreen(viewport, "Centre Master", "Processing plants, chilling centres, and bulk milk coolers", "Add Centre", () => openModal("Add New Centre", ["Centre Type", "Centre Code", "Centre Name", "Contact No.", "Email ID"]), [
+          renderTableScreen(viewport, "Storage units Master", "Processing plants, chilling centres, and bulk milk coolers", "Add Centre", () => openModal("Add New Centre", ["Centre Type", "Centre Code", "Centre Name", "Contact No.", "Email ID"]), [
             { label: "Centre Code" }, { label: "Centre Name" }, { label: "Centre Type" }, { label: "Contact No.", align: "right" }, { label: "Email ID", align: "right" }
           ], [
             ["PL01", "Central Processing Facility", "Plant", "+91 98000 00000", "plant.demo@example-dairy.com"],
